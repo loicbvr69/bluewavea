@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>BlueWavea</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="bwicon-192.png">
+<script>
+  /* Redirection selon l'appareil : téléphone vers l'app mobile, sinon vers l'app bureau */
+  (function () {
+    var mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    location.replace(mobile ? 'mobile/' : 'pc/');
+  })();
+</script>
+</head>
+<body style="margin:0;font-family:system-ui,sans-serif;background:#EDF4F9;color:#14265C;display:flex;align-items:center;justify-content:center;height:100vh">
+  <div style="text-align:center">
+    <div style="font-size:20px;font-weight:800;margin-bottom:14px">BlueWavea</div>
+    <div style="display:flex;gap:12px;justify-content:center">
+      <a href="pc/" style="background:#14265C;color:#fff;text-decoration:none;padding:12px 22px;border-radius:12px;font-weight:700">Version PC</a>
+      <a href="mobile/" style="background:#2F7DD1;color:#fff;text-decoration:none;padding:12px 22px;border-radius:12px;font-weight:700">Version mobile</a>
+    </div>
+  </div>
+</body>
+</html>
