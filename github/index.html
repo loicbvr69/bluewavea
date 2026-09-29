@@ -10,8 +10,27 @@
 <meta name="supported-color-schemes" content="light">
 <link rel="icon" href="bwicon-192.png">
 <script>
-  /* Redirection selon l'appareil : téléphone vers l'app mobile, sinon vers l'app bureau */
+  /* Redirection selon l'appareil : téléphone vers l'app mobile, sinon vers l'app bureau.
+     Exception : fin de connexion Gmail (?bwGmail=) → message lisible, puis la fenêtre se referme. */
   (function () {
+    var q = new URLSearchParams(location.search);
+    if (q.has('bwGmail')) {
+      var ok = q.get('bwGmail') === '1';
+      try { if (window.opener) window.opener.postMessage({ bwGmail: ok }, '*'); } catch (e) {}
+      document.addEventListener('DOMContentLoaded', function () {
+        document.body.innerHTML =
+          '<div style="max-width:340px;text-align:center;background:#fff;border-radius:18px;padding:28px 24px;box-shadow:0 6px 24px rgba(20,38,92,.12)">' +
+          '<div style="font-size:34px">' + (ok ? '✅' : '⚠️') + '</div>' +
+          '<div style="font-size:17px;font-weight:800;margin-top:10px"></div>' +
+          '<div style="font-size:13px;color:#5B6B94;line-height:1.6;margin-top:8px"></div></div>';
+        document.body.style.background = '#EDF4F9';
+        var d = document.body.querySelectorAll('div div');
+        d[1].textContent = q.get('titre') || '';
+        d[2].textContent = q.get('texte') || '';
+      });
+      setTimeout(function () { try { window.close(); } catch (e) {} }, ok ? 1500 : 8000);
+      return;
+    }
     var mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
     location.replace(mobile ? 'mobile/' : 'pc/');
   })();
