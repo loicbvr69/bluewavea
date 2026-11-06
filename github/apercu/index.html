@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>BlueWavea — Aperçus</title>
+<!-- (06/11/2026) Page « Aperçus » demandée par Loïc : tous les projets réunis, en utilisation seule (aucune édition).
+     Applications PC / mobile et Hélios = celles du dossier github (même build), avec le vrai cloud. -->
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #F6F7F9; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #14265C; }
+  body { display: flex; height: 100vh; overflow: hidden; }
+  nav { width: 232px; flex-shrink: 0; background: #14265C; color: #fff; display: flex; flex-direction: column; padding: 18px 12px; gap: 4px; overflow-y: auto; scrollbar-width: none; }
+  nav::-webkit-scrollbar { display: none; }
+  .marque { font-weight: 800; font-size: 17px; padding: 0 10px 2px; }
+  .sous { font-size: 11.5px; color: #9CC8EC; padding: 0 10px 14px; }
+  .titre { font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #9CC8EC; padding: 12px 10px 4px; }
+  button { all: unset; cursor: pointer; display: block; padding: 10px 12px; border-radius: 10px; font-size: 14px; font-weight: 600; color: #fff; }
+  button:hover { background: rgba(255,255,255,.08); }
+  button[aria-current="true"] { background: #2F7DD1; }
+  main { flex: 1; min-width: 0; display: flex; align-items: stretch; justify-content: center; background: #F6F7F9; }
+  iframe { border: 0; width: 100%; height: 100%; background: #fff; }
+  main.tel { align-items: center; background: #C9D6E3; }
+  main.tel iframe { width: 430px; max-width: 100%; height: min(932px, 100%); border-radius: 22px; box-shadow: 0 20px 50px rgba(20,38,92,.25); }
+  @media (max-width: 760px) {
+    body { flex-direction: column; }
+    nav { width: auto; flex-direction: row; flex-wrap: nowrap; overflow-x: auto; padding: 8px; gap: 4px; }
+    .marque, .sous, .titre { display: none; }
+    button { white-space: nowrap; padding: 8px 10px; font-size: 13px; }
+    main.tel iframe { width: 100%; height: 100%; border-radius: 0; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<nav aria-label="Projets">
+  <div class="marque">BlueWavea</div>
+  <div class="sous">Aperçus — utilisation seule</div>
+  <div class="titre">Applications</div>
+  <button data-src="../pc/" data-tel="0">💻 Application PC</button>
+  <button data-src="../mobile/" data-tel="1">📱 Application mobile</button>
+  <button data-src="../helios/index.html" data-tel="0">✨ H.É.L.I.O.S.</button>
+  <div class="titre">Site et documents</div>
+  <button data-src="site.dc.html" data-tel="0">🌐 Site (maquette)</button>
+  <button data-src="espace-client.dc.html" data-tel="0">👤 Espace client</button>
+  <button data-src="contrat.dc.html" data-tel="0">✍️ Contrat</button>
+  <button data-src="bilan.dc.html" data-tel="0">📊 Bilan comptable</button>
+  <div class="titre">Print</div>
+  <button data-src="flyer.dc.html" data-tel="0">📄 Flyer</button>
+  <button data-src="carte-de-visite.html" data-tel="0">🪪 Carte de visite</button>
+</nav>
+<main id="zone"><iframe id="vue" title="Aperçu" allow="microphone; geolocation; clipboard-write"></iframe></main>
+<script>
+  (function () {
+    var boutons = document.querySelectorAll('nav button'), vue = document.getElementById('vue'), zone = document.getElementById('zone');
+    function ouvrir(b) {
+      boutons.forEach(function (x) { x.setAttribute('aria-current', x === b ? 'true' : 'false'); });
+      zone.className = b.getAttribute('data-tel') === '1' ? 'tel' : '';
+      vue.src = b.getAttribute('data-src');
+      try { localStorage.setItem('bw-apercu-page', b.getAttribute('data-src')); } catch (e) {}
+    }
+    boutons.forEach(function (b) { b.addEventListener('click', function () { ouvrir(b); }); });
+    var der = null; try { der = localStorage.getItem('bw-apercu-page'); } catch (e) {}
+    var depart = Array.prototype.find.call(boutons, function (b) { return b.getAttribute('data-src') === der; }) || boutons[0];
+    ouvrir(depart);
+  })();
+</script>
+</body>
+</html>

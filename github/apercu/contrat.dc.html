@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#F6F7F9;font-family:'Public Sans',system-ui,sans-serif;color:#14265C} a{color:#2F7DD1} a:hover{color:#14265C}</style>
+</helmet>
+<div style="padding: 28px 32px 48px; display: flex; flex-direction: column; gap: 22px;">
+  <div style="display: flex; flex-direction: column; gap: 4px;">
+    <div style="font-size: 20px; font-weight: 900;">Aperçu — contrat aux couleurs de l'application</div>
+    <div style="font-size: 13.5px; color: #5B6B94;">Visuel seulement, rien n'est modifié dans les applications. Contrats PREMIUM et TOUT INCLUS, page 1, champs client vides.</div>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start;">
+    <sc-for list="{{ cadres }}" as="c" hint-placeholder-count="2">
+      <div style="display: flex; flex-direction: column; gap: 10px; width: {{ c.w }}; max-width: 100%;">
+        <div style="display: flex; align-items: center; gap: 8px;"><span style="background: #14265C; color: #ffffff; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px;">{{ c.label }}</span><span style="background: {{ c.badgeBg }}; color: #ffffff; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px;">{{ c.formule }}</span><span style="font-size: 12.5px; color: #5B6B94;">{{ c.sous }}</span></div>
+        <div style="background: #ffffff; border-radius: {{ c.r }}; box-shadow: 0 10px 34px rgba(20,38,92,.12); overflow: hidden; display: flex; flex-direction: column;">
+          <div style="background: #14265C; color: #ffffff; padding: {{ c.pad }}; display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 12px; border-bottom-left-radius: 22px; border-bottom-right-radius: 22px;">
+            <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+              <span style="width: 52px; height: 52px; border-radius: 14px; background: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><img src="site-bluewavea/logo-mail.png" alt="BlueWavea" style="width: 40px; height: 40px; object-fit: contain;"></span>
+              <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+                <span style="font-size: 17px; font-weight: 900;">BlueWavea</span>
+                <span style="font-size: 11.5px; font-style: italic; color: #9CC8EC;">Eau pure maîtrisée</span>
+                <span style="font-size: 10.5px; color: #C6D7E8; line-height: 1.45;">4 place des Condamines<br>69480 Anse<br>contact@bluewavea.fr<br><span style="white-space: nowrap;">06 50 37 89 30</span><br><span style="white-space: nowrap;">SIREN 892 317 496</span></span>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; text-align: right; gap: 8px; margin-left: auto; flex-shrink: 0;">
+              <span style="font-size: 11px; font-weight: 900; letter-spacing: 1px; color: #9CC8EC; white-space: nowrap;">CONTRAT DE SERVICE</span>
+              <span style="background: {{ c.badgeBg }}; color: #ffffff; font-size: 13px; font-weight: 900; letter-spacing: 1px; padding: 6px 14px; border-radius: 99px;">{{ c.formule }}</span>
+            </div>
+          </div>
+          <div style="padding: {{ c.padc }}; display: flex; flex-direction: column; gap: 14px; background: #F6F7F9;">
+            <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 10px;"><span style="width: 34px; height: 34px; border-radius: 50%; background: #DCEBFA; display: flex; align-items: center; justify-content: center; font-size: 16px;">👤</span><span style="font-size: 13px; font-weight: 900; letter-spacing: 1.2px; color: #2F7DD1;">LE CLIENT</span></div>
+                <div style="display: flex; gap: 6px;"><span style="background: #2F7DD1; color: #ffffff; font-size: 12px; font-weight: 800; padding: 6px 12px; border-radius: 99px;">Particulier</span><span style="background: #EAF2FB; color: #2F7DD1; font-size: 12px; font-weight: 800; padding: 6px 12px; border-radius: 99px;">Professionnel</span></div>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 14px;">
+                <sc-for list="{{ champsClient }}" as="f" hint-placeholder-count="7">
+                  <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;"><span style="font-size: 11px; font-weight: 800; color: #5B6B94; letter-spacing: .4px;">{{ f }}</span><span style="border: 1px solid #E3ECF5; background: #F4F9FD; border-radius: 10px; height: 34px;"></span></div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; gap: 10px;"><span style="width: 34px; height: 34px; border-radius: 50%; background: #E2F5EA; display: flex; align-items: center; justify-content: center; font-size: 16px;">🔧</span><span style="font-size: 13px; font-weight: 900; letter-spacing: 1.2px; color: #2F7DD1;">PRESTATIONS DU CONTRAT</span></div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px;">
+                <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
+                  <span style="font-size: 12px; font-weight: 800; color: #14265C;">Prestations incluses</span>
+                  <sc-for list="{{ inclus }}" as="l" hint-placeholder-count="7">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; color: #3A4A70; padding: 5px 0; border-bottom: 1px solid #EEF2F7;"><span style="min-width: 0;">{{ l.t }}</span><span style="flex-shrink: 0; background: #E2F5EA; color: #1F7A4D; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 99px;">{{ l.v }}</span></div>
+                  </sc-for>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0;">
+                  <span style="font-size: 12px; font-weight: 800; color: #14265C;">Consommables et pièces détachées</span>
+                  <sc-for list="{{ c.conso }}" as="l" hint-placeholder-count="2">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; color: #3A4A70; padding: 5px 0; border-bottom: 1px solid #EEF2F7;"><span>{{ l }}</span><span style="background: #E2F5EA; color: #1F7A4D; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 99px;">Inclus</span></div>
+                  </sc-for>
+                  <span style="font-size: 12px; font-weight: 800; color: #14265C; margin-top: 6px;">Non inclus</span>
+                  <sc-for list="{{ c.nonInclus }}" as="l" hint-placeholder-count="2">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; color: #3A4A70; padding: 5px 0; border-bottom: 1px solid #EEF2F7;"><span>{{ l }}</span><span style="background: #FDEBE9; color: #C2362F; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 99px;">Non inclus</span></div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="background: {{ c.prixBg }}; border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; justify-content: center; gap: 10px;"><span style="font-size: 26px; font-weight: 900; color: {{ c.prixFg }};">{{ c.prix }}</span><span style="font-size: 13px; font-weight: 700; color: {{ c.prixFg }};">TTC / an</span></div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+              <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 10px;"><span style="width: 34px; height: 34px; border-radius: 50%; background: #FBF1DD; display: flex; align-items: center; justify-content: center; font-size: 16px;">💧</span><span style="font-size: 13px; font-weight: 900; letter-spacing: 1.2px; color: #2F7DD1;">L'INSTALLATION</span></div>
+                <sc-for list="{{ champsInstall }}" as="f" hint-placeholder-count="3">
+                  <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 11px; font-weight: 800; color: #5B6B94;">{{ f.t }}</span><span style="border: 1px solid #E3ECF5; background: #F4F9FD; border-radius: 10px; height: 32px; display: flex; align-items: center; padding: 0 10px; font-size: 13px; color: #9AA7C0;">{{ f.ph }}</span></div>
+                </sc-for>
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span style="font-size: 11px; font-weight: 800; color: #5B6B94;">Installation conforme</span><span style="background: #E2F5EA; color: #1F7A4D; font-size: 12px; font-weight: 800; padding: 5px 12px; border-radius: 99px;">Oui</span><span style="background: #EDF4F9; color: #5B6B94; font-size: 12px; font-weight: 800; padding: 5px 12px; border-radius: 99px;">Non</span></div>
+              </div>
+              <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 10px;"><span style="width: 34px; height: 34px; border-radius: 50%; background: #F3ECFB; display: flex; align-items: center; justify-content: center; font-size: 16px;">🧾</span><span style="font-size: 13px; font-weight: 900; letter-spacing: 1.2px; color: #2F7DD1;">ATTESTATION TVA RÉDUITE</span></div>
+                <p style="margin: 0; font-size: 12.5px; line-height: 1.6; color: #3A4A70; text-wrap: pretty;">Je soussigné(e), M./Mme ……………, demeurant à l'adresse ci-dessus, atteste que le logement concerné est achevé depuis plus de deux ans, condition requise pour l'application du taux de TVA réduit.</p>
+                <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 20px; height: 20px; border-radius: 6px; background: #1F8A5B; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900;">✓</span><span style="font-size: 12.5px; font-weight: 700;">TVA réduite</span></div>
+              </div>
+            </div>
+            <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; gap: 10px;"><span style="width: 34px; height: 34px; border-radius: 50%; background: #E2F5EA; display: flex; align-items: center; justify-content: center; font-size: 16px;">✍️</span><span style="font-size: 13px; font-weight: 900; letter-spacing: 1.2px; color: #2F7DD1;">SIGNATURE</span></div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 14px;">
+                <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 11px; font-weight: 800; color: #5B6B94;">Fait à</span><span style="border: 1px solid #E3ECF5; background: #F4F9FD; border-radius: 10px; height: 32px;"></span></div>
+                <div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 11px; font-weight: 800; color: #5B6B94;">Le</span><span style="border: 1px solid #E3ECF5; background: #F4F9FD; border-radius: 10px; height: 32px;"></span></div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 13px; font-weight: 800; color: #14265C;">Signature du client</span><span style="font-size: 11px; color: #8A97B8; line-height: 1.5;">Le client recopie la mention « Bon pour accord » puis signe ci-dessous.</span></div><span style="border: 1px dashed #B7E0C7; border-radius: 9px; padding: 10px 12px; font-size: 13.5px; font-style: italic; color: #9AA7C0; background: #ffffff;">Bon pour accord</span>
+              <div style="border: 1px dashed #B7E0C7; background: #ffffff; border-radius: 11px; height: 130px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-style: italic; color: #A9B4CC;">Signez ici avec le doigt ou la souris</div><div style="display: flex; gap: 8px;"><span style="flex: 1; text-align: center; background: #ffffff; color: #5B6B94; border: 1px solid #DCE8F2; border-radius: 11px; padding: 10px; font-size: 13px; font-weight: 700;">Effacer la signature</span></div>
+            </div>
+            <div style="background: #14265C; color: #ffffff; border-radius: 16px; padding: 12px 18px; display: flex; align-items: center; gap: 12px;"><span style="width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.14); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;">📄</span><div style="display: flex; flex-direction: column; gap: 1px; min-width: 0;"><span style="font-size: 12.5px; font-weight: 900; letter-spacing: 1px;">CONDITIONS GÉNÉRALES DE VENTE</span><span style="font-size: 11.5px; color: #C6D7E8;">Page 2 — texte inchangé</span></div></div>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 18px;">
+    <div style="font-size: 20px; font-weight: 900;">Devis et factures — même visuel</div>
+    <div style="font-size: 13.5px; color: #5B6B94;">Structure des documents actuels, sans données (« — »).</div>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start;">
+    <sc-for list="{{ docs }}" as="c" hint-placeholder-count="4">
+      <div style="display: flex; flex-direction: column; gap: 10px; width: {{ c.w }}; max-width: 100%;">
+        <div style="display: flex; align-items: center; gap: 8px;"><span style="background: #14265C; color: #ffffff; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px;">{{ c.label }}</span><span style="background: {{ c.badgeBg }}; color: #ffffff; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 99px;">{{ c.titre }}</span><span style="font-size: 12.5px; color: #5B6B94;">{{ c.sous }}</span></div>
+        <div style="background: #ffffff; border-radius: {{ c.r }}; box-shadow: 0 10px 34px rgba(20,38,92,.12); overflow: hidden; display: flex; flex-direction: column;">
+          <div style="background: #14265C; color: #ffffff; padding: {{ c.pad }}; display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 12px; border-bottom-left-radius: 22px; border-bottom-right-radius: 22px;">
+            <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+              <span style="width: 52px; height: 52px; border-radius: 14px; background: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><img src="site-bluewavea/logo-mail.png" alt="BlueWavea" style="width: 40px; height: 40px; object-fit: contain;"></span>
+              <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+                <span style="font-size: 17px; font-weight: 900;">BlueWavea</span>
+                <span style="font-size: 11.5px; font-style: italic; color: #9CC8EC;">Eau pure maîtrisée</span>
+                <span style="font-size: 10.5px; color: #C6D7E8; line-height: 1.45;">4 place des Condamines<br>69480 Anse<br>contact@bluewavea.fr<br><span style="white-space: nowrap;">06 50 37 89 30</span><br><span style="white-space: nowrap;">SIREN 892 317 496</span></span>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; text-align: right; gap: 6px; margin-left: auto; flex-shrink: 0;">
+              <span style="background: {{ c.badgeBg }}; color: #ffffff; font-size: 15px; font-weight: 900; letter-spacing: 1.4px; padding: 6px 16px; border-radius: 99px; width: fit-content;">{{ c.titre }}</span>
+              <span style="font-size: 11.5px; color: #C6D7E8;">N° —</span>
+              <span style="font-size: 11.5px; color: #C6D7E8;">{{ c.date1 }} —</span>
+              <span style="font-size: 11.5px; color: #C6D7E8;">{{ c.date2 }} —</span>
+            </div>
+          </div>
+          <div style="padding: {{ c.padc }}; display: flex; flex-direction: column; gap: 14px; background: #F6F7F9;">
+            <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;"><span style="width: 34px; height: 34px; border-radius: 50%; background: #DCEBFA; display: flex; align-items: center; justify-content: center; font-size: 16px;">👤</span><span style="font-size: 13px; font-weight: 900; letter-spacing: 1.2px; color: #2F7DD1;">{{ c.pour }}</span></div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 14px;">
+                <sc-for list="{{ champsDoc }}" as="f" hint-placeholder-count="6">
+                  <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;"><span style="font-size: 11px; font-weight: 800; color: #5B6B94;">{{ f }}</span><span style="font-size: 13px; color: #14265C; font-weight: 600;">—</span></div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;"><span style="width: 34px; height: 34px; border-radius: 50%; background: #E2F5EA; display: flex; align-items: center; justify-content: center; font-size: 16px;">🔧</span><span style="font-size: 13px; font-weight: 900; letter-spacing: 1.2px; color: #2F7DD1;">PRESTATIONS ET PIÈCES</span></div>
+              <div style="display: grid; grid-template-columns: minmax(0, 1fr) 46px 78px 84px; gap: 8px; font-size: 11px; font-weight: 800; color: #5B6B94; letter-spacing: .4px; padding-bottom: 6px; border-bottom: 1px solid #E3ECF5;"><span>DÉSIGNATION</span><span style="text-align: center;">QTÉ</span><span style="text-align: right;">P.U.</span><span style="text-align: right;">TOTAL</span></div>
+              <div style="display: grid; grid-template-columns: minmax(0, 1fr) 46px 78px 84px; gap: 8px; font-size: 12.5px; color: #3A4A70; padding: 6px 0; border-bottom: 1px solid #EEF2F7;"><span>—</span><span style="text-align: center;">—</span><span style="text-align: right;">—</span><span style="text-align: right; font-weight: 800; color: #14265C;">—</span></div>
+              <div style="display: flex; justify-content: flex-end;">
+                <div style="width: 100%; max-width: 270px; display: flex; flex-direction: column; gap: 5px;">
+                  <div style="display: flex; justify-content: space-between; font-size: 12px; color: #5B6B94;"><span>Total net</span><span>—</span></div>
+                  <div style="display: flex; justify-content: space-between; font-size: 11px; color: #8A97B8;"><span>TVA non applicable</span><span>0,00 €</span></div>
+                  <div style="background: {{ c.totBg }}; border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-top: 4px;"><span style="font-size: 13.5px; font-weight: 900; color: {{ c.totFg }};">{{ c.totLabel }}</span><span style="font-size: 17px; font-weight: 900; color: {{ c.totFg }};">—</span></div>
+                </div>
+              </div>
+            </div>
+            <sc-if value="{{ c.estFacture }}" hint-placeholder-val="{{ false }}">
+              <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;"><span style="width: 34px; height: 34px; border-radius: 50%; background: #FBF1DD; display: flex; align-items: center; justify-content: center; font-size: 16px;">💳</span><span style="font-size: 13px; font-weight: 900; letter-spacing: 1.2px; color: #2F7DD1;">RÈGLEMENT</span></div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 14px;">
+                  <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; font-weight: 800; color: #5B6B94;">Mode de règlement</span><span style="font-size: 13px; color: #14265C; font-weight: 600;">—</span></div>
+                  <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 11px; font-weight: 800; color: #5B6B94;">N° de chèque / transaction</span><span style="font-size: 13px; color: #14265C; font-weight: 600;">—</span></div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><span style="font-size: 11px; font-weight: 800; color: #5B6B94;">Tampon</span><span style="background: #E2F5EA; color: #1F7A4D; border: 2px solid #1F7A4D; border-radius: 8px; padding: 4px 12px; font-size: 12.5px; font-weight: 900; letter-spacing: 1px;">PAYÉE</span><span style="font-size: 11.5px; color: #8A97B8;">(affiché une fois réglée)</span></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ c.estDevis }}" hint-placeholder-val="{{ false }}">
+              <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 10px;"><span style="width: 34px; height: 34px; border-radius: 50%; background: #E2F5EA; display: flex; align-items: center; justify-content: center; font-size: 16px;">✍️</span><span style="font-size: 13px; font-weight: 900; letter-spacing: 1.2px; color: #2F7DD1;">BON POUR ACCORD</span></div>
+                <div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 13px; font-weight: 800; color: #14265C;">Signature du client</span><span style="font-size: 11px; color: #8A97B8; line-height: 1.5;">Le client recopie la mention « Bon pour accord » puis signe ci-dessous.</span></div><span style="border: 1px dashed #B7E0C7; border-radius: 9px; padding: 10px 12px; font-size: 13.5px; font-style: italic; color: #9AA7C0; background: #ffffff;">Bon pour accord</span>
+                <div style="border: 1px dashed #B7E0C7; background: #ffffff; border-radius: 11px; height: 130px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-style: italic; color: #A9B4CC;">Signez ici avec le doigt ou la souris</div><div style="display: flex; gap: 8px;"><span style="flex: 1; text-align: center; background: #ffffff; color: #5B6B94; border: 1px solid #DCE8F2; border-radius: 11px; padding: 10px; font-size: 13px; font-weight: 700;">Effacer la signature</span></div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      cadres: (() => {
+        const P = { formule: 'PREMIUM', badgeBg: '#B0872B', prix: '130 €', prixBg: '#FBF1DD', prixFg: '#A96A10', conso: ['Filtrations', 'Entretien résines'], nonInclus: ['Toutes pièces de rechange', 'Sel'] };
+        const T = { formule: 'TOUT INCLUS', badgeBg: '#8A54C4', prix: '210 €', prixBg: '#F3ECFB', prixFg: '#6B3FA0', conso: ['Filtrations', 'Entretien résines', 'Toutes pièces de rechange'], nonInclus: ['Sel'] };
+        const B = { label: 'Bureau', sous: 'largeur A4', w: '794px', r: '6px', pad: '22px 30px', padc: '20px 26px 26px' };
+        const M = { label: 'Mobile', sous: 'largeur iPhone', w: '390px', r: '28px', pad: '20px 18px', padc: '14px 12px 18px' };
+        return [{ ...B, ...P }, { ...M, ...P }, { ...B, ...T }, { ...M, ...T }];
+      })(),
+      champsClient: ['Civilité', 'Nom', 'Adresse', 'Code postal', 'Ville', 'Téléphone', 'E-mail'],
+      inclus: [
+        { t: 'Nombre de visites pendant la période', v: '1' },
+        { t: "Main d'œuvre", v: 'Inclus' },
+        { t: 'Déplacement', v: 'Inclus' },
+        { t: 'Analyse dureté amont / aval', v: 'Inclus' },
+        { t: 'Démontage, nettoyage, graissage, vérification des cycles de régénération et de la pression', v: 'Inclus' },
+        { t: "Main d'œuvre hors visite", v: 'Inclus' },
+        { t: 'Déplacement hors visite', v: 'Inclus' },
+      ],
+      docs: (() => {
+        const B = { label: 'Bureau', sous: 'largeur A4', w: '794px', r: '6px', pad: '22px 30px', padc: '20px 26px 26px' };
+        const M = { label: 'Mobile', sous: 'largeur iPhone', w: '390px', r: '28px', pad: '20px 18px', padc: '14px 12px 18px' };
+        const D = { titre: 'DEVIS', badgeBg: '#2F7DD1', date1: 'Émis le', date2: "Valable jusqu'au", pour: 'DEVIS POUR', totLabel: 'Total à payer', totBg: '#EAF2FB', totFg: '#14265C', estDevis: true, estFacture: false };
+        const F = { titre: 'FACTURE', badgeBg: '#1F8A5B', date1: 'Émise le', date2: 'Échéance', pour: 'FACTURÉ À', totLabel: 'Net à payer', totBg: '#E2F5EA', totFg: '#1F7A4D', estDevis: false, estFacture: true };
+        return [{ ...B, ...D }, { ...M, ...D }, { ...B, ...F }, { ...M, ...F }];
+      })(),
+      champsDoc: ['Client', 'Adresse', 'Téléphone', 'E-mail', 'Adoucisseur', 'N° de série'],
+      champsInstall: [{ t: "Date de l'achat", ph: '' }, { t: 'N° de série', ph: '' }, { t: 'Commentaires', ph: 'RAS' }],
+    };
+  }
+}
+</script>
+</body>
+</html>

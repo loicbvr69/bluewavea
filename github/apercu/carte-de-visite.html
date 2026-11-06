@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>BlueWavea — Carte de visite</title>
+<style>
+  @page{size:auto;margin:10mm}
+  :root{--profond:#0B1F3F;--eau:#1F7A9C;--filet:#b9d0da}
+  *{box-sizing:border-box}
+  body{margin:0;background:#EEF3F7;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--profond)}
+
+  .barre{padding:22px 26px 4px;text-align:center}
+  .barre h1{margin:0;font-size:17px;font-weight:800;letter-spacing:.02em}
+  .barre p{margin:5px 0 0;font-size:12.5px;color:#4a6b7a}
+
+  .planche{display:flex;flex-wrap:wrap;gap:26px;justify-content:center;padding:22px 26px 30px}
+  .bloc{text-align:center}
+  .etiq{margin:0 0 9px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--eau)}
+
+  /* format standard 85 × 55 mm, marges de sécurité intégrées */
+  .carte{
+    width:210mm;height:136mm;background:#F2F8FD;
+    display:flex;align-items:center;justify-content:center;
+    padding:0;position:relative;overflow:hidden;
+  }
+  .carte img{display:block;width:100%;height:100%;object-fit:cover}
+
+  /* aucun filet en pied de carte */
+
+  .note{padding:0 26px 34px;font-size:12.5px;color:#4a6b7a;line-height:1.65;max-width:820px;margin:0 auto}
+  .note b{color:var(--profond)}
+
+  @media print{
+    body{background:#fff}
+    .barre,.note,.etiq{display:none}
+    .planche{padding:0;gap:0}
+    .bloc + .bloc{page-break-before:always}
+    .carte{width:85mm;height:55mm}
+  }
+</style>
+</head>
+<body>
+  <div class="barre">
+    <h1>Carte de visite BlueWavea</h1>
+    <p>Format standard 85 × 55 mm — affiché ici au double pour le travail ; l’impression reste à la taille réelle.</p>
+  </div>
+
+  <div class="planche">
+    <div class="bloc">
+      <div class="etiq">Recto</div>
+      <div class="carte"><img src="BlueWavea-carte-recto.png" alt="BlueWavea — Eau Pure Maîtrisée, Confiance Assurée"></div>
+    </div>
+    <div class="bloc">
+      <div class="etiq">Verso</div>
+      <div class="carte"><img src="BlueWavea-carte-verso.png" alt="Entretien & SAV — 06 50 37 89 30 — contact@bluewavea.fr"></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Impression :</b> format 85 × 55 mm, le standard français. Utilisez <b>Fichier → Imprimer</b> : le recto sort sur la première page, le verso sur la seconde — indiquez « recto-verso, retournement sur le bord long » à votre imprimeur. Les deux fichiers d’origine sont dans le dossier, en pleine résolution, si vous préférez les confier directement à un imprimeur en ligne.
+  </div>
+</body>
+</html>
