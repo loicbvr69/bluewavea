@@ -20,7 +20,9 @@
   button { all: unset; cursor: pointer; display: block; padding: 10px 12px; border-radius: 10px; font-size: 14px; font-weight: 600; color: #fff; }
   button:hover { background: rgba(255,255,255,.08); }
   button[aria-current="true"] { background: #2F7DD1; }
-  main { flex: 1; min-width: 0; display: flex; align-items: stretch; justify-content: center; background: #F6F7F9; }
+  main { flex: 1; min-width: 0; display: flex; align-items: stretch; justify-content: center; background: #F6F7F9; position: relative; }
+  #papier { position: absolute; inset: 0; z-index: 5; overflow-y: auto; background: #3A4766; display: none; scrollbar-width: none; }
+  #papier::-webkit-scrollbar { display: none; }
   iframe { border: 0; width: 100%; height: 100%; background: #fff; }
   main.tel { align-items: center; background: #C9D6E3; }
   main.tel iframe { width: 430px; max-width: 100%; height: min(932px, 100%); border-radius: 22px; box-shadow: 0 20px 50px rgba(20,38,92,.25); }
@@ -44,25 +46,138 @@
   <div class="titre">Site et documents</div>
   <button data-src="site.dc.html" data-tel="0">🌐 Site (maquette)</button>
   <button data-src="espace-client.dc.html" data-tel="0">👤 Espace client</button>
-  <button data-src="contrat.dc.html" data-tel="0">✍️ Contrat</button>
-  <button data-src="bilan.dc.html" data-tel="0">📊 Bilan comptable</button>
+  <button data-src="contrat.dc.html" data-tel="0">✍️ Contrat (modèle)</button>
+  <div class="titre">Documents — vrais, sur papier</div>
+  <button data-src="../pc/" data-tel="0" data-doc="facture">🧾 Dernière facture</button>
+  <button data-src="../pc/" data-tel="0" data-doc="devis">📝 Dernier devis</button>
+  <button data-src="../pc/" data-tel="0" data-doc="cr">📋 Dernier compte rendu</button>
+  <button data-src="../pc/" data-tel="0" data-doc="bilan">📊 Bilan comptable</button>
   <div class="titre">Print</div>
   <button data-src="flyer.dc.html" data-tel="0">📄 Flyer</button>
   <button data-src="carte-de-visite.html" data-tel="0">🪪 Carte de visite</button>
 </nav>
-<main id="zone"><iframe id="vue" title="Aperçu" allow="microphone; geolocation; clipboard-write"></iframe></main>
+<main id="zone"><iframe id="vue" title="Aperçu" allow="microphone; geolocation; clipboard-write"></iframe><div id="papier"></div><iframe id="docapp" title="" aria-hidden="true" tabindex="-1" style="position:absolute;left:-12000px;top:0;width:1280px;height:900px;border:0;pointer-events:none"></iframe></main>
 <script>
   (function () {
     var boutons = document.querySelectorAll('nav button'), vue = document.getElementById('vue'), zone = document.getElementById('zone');
+    /* (12/11/2026) « des visuels uniques, papier, pas la page de l'application » : les VRAIS documents (dernière facture,
+       dernier devis, dernier compte rendu, bilan) seuls, sur une feuille blanche. L'application PC est chargée derrière, en
+       lecture seule (vrai cloud, rien n'est enregistré ni envoyé) ; le document est recopié depuis elle. */
+    /* (12/11/2026) « ça met du temps à venir et je vois une feuille vide » : les documents ont leur PROPRE application cachée
+       (#docapp), préchargée en arrière-plan dès l'ouverture de la page et jamais remplacée par les autres aperçus ; le
+       document n'est recopié qu'une fois l'application entièrement prête (fin de l'écran de démarrage). */
+    var papier = document.getElementById('papier'), app = document.getElementById('docapp'), tour = 0;
+    function chargerApp() { if (!app.getAttribute('src')) app.src = '../pc/#papier'; }
+    setTimeout(chargerApp, 1200);
+    var attendre = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+    function logique() {
+      try {
+        var D = app.contentWindow.document, els = D.querySelectorAll('*');
+        for (var i = 0; i < els.length; i++) {
+          var k = Object.keys(els[i]).find(function (x) { return x.indexOf('__react') === 0; }); if (!k) continue;
+          var f = els[i][k], n = 0;
+          while (f && n < 200) { var s = f.stateNode; if (s && s.logic && s.logic.piecesRdv) return s.logic; f = f.return; n++; }
+        }
+      } catch (e) {}
+      return null;
+    }
+    function cadre(titre, html) {
+      papier.innerHTML = '<div style="min-height:100%;box-sizing:border-box;padding:0 24px 32px;display:flex;flex-direction:column;align-items:center">' +
+        '<div style="position:sticky;top:0;z-index:2;width:100%;display:flex;justify-content:center;padding:16px 0 18px;background:linear-gradient(#3A4766 75%,rgba(58,71,102,0))">' +
+        '<div style="width:100%;max-width:680px;box-sizing:border-box;background:#14265C;color:#fff;padding:13px 18px;border-radius:12px;font-weight:800;font-size:16px;box-shadow:0 4px 14px rgba(0,0,0,.25)">' + titre + '</div></div>' + html + '</div>';
+      papier.style.display = 'block'; papier.scrollTop = 0;
+    }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    async function surPapier(doc) {
+      var t = ++tour;
+      cadre('Préparation du document…', '<div id="pAtt" style="color:#fff;font-size:14px;opacity:.85;margin-top:40px">Le document est fabriqué à partir de vos vraies données (lecture seule).</div>');
+      chargerApp();
+      var L = null, pret = false;
+      for (var i = 0; i < 150; i++) {
+        L = logique();
+        pret = !!(L && (L.state.facturesList || []).length && (L.state.clientsList || []).length && app.contentWindow.document.body.classList.contains('bw-splash-fini'));
+        if (pret) break; await attendre(200);
+      }
+      if (t !== tour) return;
+      if (!pret) { cadre('Document indisponible', '<div style="color:#fff">L’application ne s’est pas chargée (connexion ?).</div>'); return; }
+      var S = L.state, W = app.contentWindow, id = '', titre = '';
+      var RAZ = { factureApercu: null, devisApercu: null, crApercuId: null, bilanCptOuvert: false, crPanelOuvert: false, histoDetailId: null, clientId: null };
+      var avec = function (o) { var x = {}, a; for (a in RAZ) x[a] = RAZ[a]; for (a in o) x[a] = o[a]; return x; };
+      var parNum = function (l) { return (l || []).slice().sort(function (a, b) { return String(b.num || '').localeCompare(String(a.num || '')); }); };
+      var nomCli = function (id) { return ((S.clientsList || []).find(function (c) { return c.id === id; }) || {}).nom || ''; };
+      if (doc === 'facture') { var f = parNum(S.facturesList)[0]; L.setState(avec({ screen: 'factures', factureApercu: f.id, factureMode: 'visu' })); id = 'bw-sheet-facture'; titre = '🧾 Facture ' + f.num + ' — ' + nomCli(f.clientId); }
+      else if (doc === 'devis') { var d = parNum(S.devisList)[0]; if (!d) { cadre('Aucun devis', ''); return; } L.setState(avec({ screen: 'devis', devisApercu: d.id, devisMode: 'visu' })); id = 'bw-sheet-devis'; titre = '📝 Devis ' + d.num + ' — ' + nomCli(d.clientId); }
+      else if (doc === 'cr') {
+        var r = (S.rdvs || []).filter(function (x) { return /termin/i.test(x.statut || ''); }).sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); })[0];
+        if (!r) { cadre('Aucun compte rendu', ''); return; }
+        var fa = (S.facturesList || []).find(function (x) { return x.num === r.facture; });
+        L.setState(avec({ screen: 'clients', clientId: r.clientId, histoDetailId: r.id, histoDetailFac: fa && fa.id })); id = 'bw-cr-histo';
+        titre = '📋 Compte rendu du ' + String(r.date || '').split('-').reverse().join('/') + ' — ' + (r.client || '');
+      }
+      else { L.setState(avec({ screen: 'compta', bilanCptOuvert: true })); id = 'bw-sheet-bilan'; titre = '📊 Bilan comptable ' + new Date().getFullYear(); }
+      var el = null;
+      for (var j = 0; j < 30; j++) { el = W.document.getElementById(id); if (el && el.getBoundingClientRect().width > 0) break; await attendre(200); }
+      await attendre(600);
+      if (t !== tour) return;
+      if (!el) { cadre(esc(titre), '<div style="color:#fff">Document introuvable.</div>'); return; }
+      /* (12/11/2026) « flou, pas assez visible, plus grand et mieux cadré » : plus d'image du PDF — le document lui-même
+         (texte net à toute taille) est recopié sur une feuille blanche, agrandi raisonnablement (×1,4 au plus, 680 px de large au plus — « pas aussi gros »),
+         sans boutons ni éléments de l'application. */
+      var nat = Math.round(Math.max(el.scrollWidth, el.getBoundingClientRect().width));
+      var cl = el.cloneNode(true);
+      [].forEach.call(cl.querySelectorAll('button,[data-bw-interne],input[type=file]'), function (n) { n.remove(); });
+      [].forEach.call(cl.querySelectorAll('*'), function (n) {
+        var st = n.style;
+        if (st.position === 'sticky' || st.position === 'fixed') st.position = 'static';
+        if (/auto|scroll/.test(st.overflowY)) st.overflowY = 'visible';
+        if (st.maxHeight) st.maxHeight = 'none';
+        if (!n.children.length && /^\s*[✕×]\s*$/.test(n.textContent)) n.remove();
+      });
+      ['maxHeight', 'overflow', 'borderRadius', 'boxShadow', 'margin', 'maxWidth', 'transform'].forEach(function (p) { cl.style[p] = { maxHeight: 'none', overflow: 'visible', borderRadius: '0', boxShadow: 'none', margin: '0', maxWidth: 'none', transform: 'none' }[p]; });
+      cl.style.width = nat + 'px'; cl.removeAttribute('id');
+      var styles = [].map.call(W.document.querySelectorAll('style'), function (s) { return s.outerHTML; }).join('');
+      /* (12/11/2026) « à chaque clic l'aperçu zoome et revient à la normale » : la feuille reste invisible tant que sa taille
+         n'est pas stable (polices chargées, hauteur identique deux fois de suite), puis apparaît d'un coup à sa taille finale. */
+      var zone0 = papier.firstChild, attente = document.getElementById('pAtt');
+      var Z = document.createElement('div'); Z.id = 'pZ'; Z.style.cssText = 'width:100%;max-width:680px;display:flex;justify-content:center;position:relative';
+      zone0.appendChild(Z);
+      var fr = document.createElement('iframe');
+      fr.title = titre; fr.style.cssText = 'border:0;background:#fff;display:block;box-shadow:0 8px 30px rgba(0,0,0,.4);border-radius:4px;position:absolute;top:0;visibility:hidden;opacity:0;transition:opacity .25s';
+      Z.appendChild(fr);
+      var largeur = Math.min(680, Z.clientWidth, Math.round(nat * 1.4)), k = largeur / nat; fr.style.width = largeur + 'px'; Z.style.maxWidth = largeur + 'px';
+      var d = fr.contentDocument; d.open();
+      d.write('<!doctype html><html class="' + W.document.documentElement.className + '"><head><meta charset="utf-8">' + styles +
+        '<style>html,body{margin:0;background:#fff;overflow:hidden;font-family:"Public Sans",sans-serif;color:#14265C}#p{zoom:' + k + ';width:' + nat + 'px}</style></head>' +
+        '<body class="bw-pret bw-splash-fini"><div id="p"></div></body></html>');
+      d.close();
+      d.getElementById('p').appendChild(d.importNode(cl, true));
+      var hPrec = -1;
+      for (var h = 0; h < 20; h++) {
+        await attendre(150); if (t !== tour) return;
+        try { await d.fonts.ready; } catch (e) {}
+        var H = Math.ceil(d.getElementById('p').getBoundingClientRect().height);
+        if (H === hPrec && H > 0) break; hPrec = H;
+      }
+      fr.style.height = hPrec + 'px';
+      if (attente) attente.remove();
+      zone0.firstChild.firstChild.textContent = titre;
+      fr.style.position = 'static'; fr.style.visibility = 'visible';
+      requestAnimationFrame(function () { fr.style.opacity = '1'; });
+    }
     function ouvrir(b) {
       boutons.forEach(function (x) { x.setAttribute('aria-current', x === b ? 'true' : 'false'); });
       zone.className = b.getAttribute('data-tel') === '1' ? 'tel' : '';
-      vue.src = b.getAttribute('data-src');
-      try { localStorage.setItem('bw-apercu-page', b.getAttribute('data-src')); } catch (e) {}
+      var src = b.getAttribute('data-src'), doc = b.getAttribute('data-doc');
+      if (doc) { surPapier(doc); }
+      else {
+        tour++; papier.style.display = 'none';
+        vue.src = src;
+      }
+      try { localStorage.setItem('bw-apercu-page', src + (doc ? '#' + doc : '')); } catch (e) {}
     }
     boutons.forEach(function (b) { b.addEventListener('click', function () { ouvrir(b); }); });
     var der = null; try { der = localStorage.getItem('bw-apercu-page'); } catch (e) {}
-    var depart = Array.prototype.find.call(boutons, function (b) { return b.getAttribute('data-src') === der; }) || boutons[0];
+    var depart = Array.prototype.find.call(boutons, function (b) { return b.getAttribute('data-src') + (b.getAttribute('data-doc') ? '#' + b.getAttribute('data-doc') : '') === der; }) || boutons[0];
     ouvrir(depart);
   })();
 </script>
