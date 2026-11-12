@@ -5,7 +5,7 @@
    remontent au cloud dès le retour du réseau.
    (27/10/2026) Il affiche aussi les notifications envoyées par le service d'alertes
    (cloudflare/bluewavea-alertes.js) et, touchées, ouvre l'application sur ses alertes. */
-var CACHE = 'bluewavea-v3';
+var CACHE = 'bluewavea-v4';
 
 self.addEventListener('install', function (e) {
   self.skipWaiting();
@@ -29,9 +29,13 @@ self.addEventListener('fetch', function (e) {
   if (/supabase|brevo|googleapis|gstatic|workers\.dev/.test(url.hostname)) return;
 
   /* Page : réseau d'abord (pour avoir la dernière version), cache en secours. */
+  /* (12/11/2026) « build 105 en ligne » mais l'aperçu montrait encore le 104 : le navigateur gardait la page
+     jusqu'à 10 minutes (cache de GitHub Pages). La page et les fichiers du site sont désormais toujours
+     revérifiés auprès du serveur (cache: 'no-cache') : une version publiée s'affiche au chargement suivant. */
+  var frais = url.origin === self.location.origin;
   if (r.mode === 'navigate') {
     e.respondWith(
-      fetch(r).then(function (rep) {
+      fetch(r, { cache: 'no-cache' }).then(function (rep) {
         var copie = rep.clone();
         caches.open(CACHE).then(function (c) { c.put('./index.html', copie); });
         return rep;
@@ -45,7 +49,7 @@ self.addEventListener('fetch', function (e) {
   /* Ressources : RÉSEAU d'abord, cache en secours. Le cache ne doit jamais figer une
      version périmée de l'application ; il ne sert que hors connexion. */
   e.respondWith(
-    fetch(r).then(function (rep) {
+    (frais ? fetch(r, { cache: 'no-cache' }) : fetch(r)).then(function (rep) {
       /* les bibliothèques chargées depuis un CDN (réponses « opaques ») sont aussi gardées :
          sans elles, l'application ne démarre pas hors connexion */
       if (rep && (rep.status === 200 || rep.type === 'opaque')) {
