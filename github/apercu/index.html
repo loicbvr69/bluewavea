@@ -48,9 +48,10 @@
   <button data-src="espace-client.dc.html" data-tel="0">👤 Espace client</button>
   <button data-src="contrat.dc.html" data-tel="0">✍️ Contrat (modèle)</button>
   <div class="titre">Documents — vrais, sur papier</div>
-  <button data-src="../pc/" data-tel="0" data-doc="facture">🧾 Dernière facture</button>
-  <button data-src="../pc/" data-tel="0" data-doc="devis">📝 Dernier devis</button>
-  <button data-src="../pc/" data-tel="0" data-doc="cr">📋 Dernier compte rendu</button>
+  <button data-src="../pc/" data-tel="0" data-doc="facture">🧾 Facture</button>
+  <button data-src="../pc/" data-tel="0" data-doc="devis">📝 Devis</button>
+  <button data-src="../pc/" data-tel="0" data-doc="cr">📋 Compte Rendu</button>
+  <button data-src="../pc/" data-tel="0" data-doc="crclient">📨 Compte rendu client</button>
   <button data-src="../pc/" data-tel="0" data-doc="bilan">📊 Bilan comptable</button>
   <div class="titre">Print</div>
   <button data-src="flyer.dc.html" data-tel="0">📄 Flyer</button>
@@ -67,6 +68,8 @@
        (#docapp), préchargée en arrière-plan dès l'ouverture de la page et jamais remplacée par les autres aperçus ; le
        document n'est recopié qu'une fois l'application entièrement prête (fin de l'écran de démarrage). */
     var papier = document.getElementById('papier'), app = document.getElementById('docapp'), tour = 0;
+    /* (13/11/2026) l'application cachée relit le cloud même quand la page n'est pas au premier plan (sinon : « je vois rien ») */
+    app.addEventListener('load', function () { try { Object.defineProperty(app.contentWindow.document, 'hidden', { configurable: true, get: function () { return false; } }); } catch (e) {} });
     function chargerApp() { if (!app.getAttribute('src')) app.src = '../pc/#papier'; }
     setTimeout(chargerApp, 1200);
     var attendre = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
@@ -88,43 +91,130 @@
       papier.style.display = 'block'; papier.scrollTop = 0;
     }
     function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-    async function surPapier(doc) {
-      var t = ++tour;
-      cadre('Préparation du document…', '<div id="pAtt" style="color:#fff;font-size:14px;opacity:.85;margin-top:40px">Le document est fabriqué à partir de vos vraies données (lecture seule).</div>');
-      chargerApp();
-      var L = null, pret = false;
-      for (var i = 0; i < 150; i++) {
-        L = logique();
-        pret = !!(L && (L.state.facturesList || []).length && (L.state.clientsList || []).length && app.contentWindow.document.body.classList.contains('bw-splash-fini'));
-        if (pret) break; await attendre(200);
+    /* (13/11/2026) « tous les onglets doivent s'ouvrir en moins d'une seconde » : pauses sans minuterie (les minuteries sont
+       ralenties à 1 s quand la page n'est pas au premier plan) et documents préparés à l'avance, dès que l'application cachée
+       est prête : un clic affiche la feuille déjà fabriquée, puis la remet à jour en arrière-plan. */
+    var pause = function () { return new Promise(function (ok) { var c = new MessageChannel(); c.port1.onmessage = function () { ok(); }; c.port2.postMessage(0); }); };
+    var guetter = async function (f, max) { var t0 = Date.now(); while (Date.now() - t0 < (max || 3000)) { var x = f(); if (x) return x; await pause(); } return null; };
+    /* compte rendu complet : copie figée (valeurs des champs comprises) de l'écran du RDV et de chacun de ses onglets */
+    async function crComplet(L, W, r, avec) {
+      var D = W.document, box = D.createElement('div');
+      var figer = function (src) {
+        var cl = src.cloneNode(true), a = src.querySelectorAll('input,textarea,select'), b = cl.querySelectorAll('input,textarea,select');
+        [].forEach.call(a, function (e, i) {
+          var c = b[i]; if (!c) return;
+          if (e.type === 'checkbox' || e.type === 'radio') { if (e.checked) c.setAttribute('checked', ''); else c.removeAttribute('checked'); return; }
+          var v = e.tagName === 'SELECT' ? ((e.options[e.selectedIndex] || {}).text || '') : (e.value || '—');
+          var s = D.createElement('div'); s.textContent = v;
+          s.style.cssText = 'padding:9px 12px;border:1px solid #DCE8F2;border-radius:9px;font-size:13px;color:#14265C;background:#F7FAFD;white-space:pre-wrap;min-height:18px';
+          c.replaceWith(s);
+        });
+        /* le mode de règlement choisi (bouton foncé) reste visible en pastille ; les autres boutons disparaissent */
+        [].forEach.call(cl.querySelectorAll('button'), function (n) {
+          if (/^(💵 Espèces|🏦 Virement|📄 Chèque|💳 Carte)$/.test(n.textContent.trim()) && /20, 38, 92|#14265C/i.test(n.getAttribute('style') || '')) {
+            var p = D.createElement('span'); p.textContent = n.textContent.trim();
+            p.style.cssText = 'display:inline-block;background:#14265C;color:#fff;font-size:13px;font-weight:800;border-radius:99px;padding:7px 14px';
+            n.replaceWith(p);
+          }
+        });
+        [].forEach.call(cl.querySelectorAll('button,[data-bw-interne],input[type=file]'), function (n) { n.remove(); });
+        return cl;
+      };
+      var ecran = function () { return D.querySelector('[data-screen-label="Comptes rendus"]'); };
+      L.setState(avec({ screen: 'comptesrendus', crApercuId: r.id, crPanelOuvert: false, crSousOnglet: null }));
+      if (!(await guetter(function () { var e = ecran(); return e && /Statut de l'intervention/i.test(e.textContent) && e; }, 5000))) return null;
+      var tete = figer(ecran());
+      [].forEach.call(tete.querySelectorAll('div,span,a'), function (n) {
+        if (/^(← ?Retour|🗑 ?Supprimer|↩ Annuler la facturation.*|↩ Revenir en arrière.*|Réglée sur place.*|💶 Envoyer en facturation.*)$/.test(n.textContent.trim())) n.remove();
+      });
+      box.appendChild(tete);
+      var ONG = [['analyse', '💧 Analyse'], ['check', '☑️ Contrôles'], ['conf', '🛡️ Conformité'], ['ms', '🚿 Mise en service'], ['oc', '📌 Obligation client'], ['cr', '📋 Compte rendu'], ['histo', '🕓 Historique'], ['fact', '💶 Facturation']];
+      for (var i = 0; i < ONG.length; i++) {
+        L.setState({ crSousOnglet: ONG[i][0], crPanelOuvert: true });
+        var titreOng = ONG[i][1];
+        /* (13/11/2026) build 106 : chaque onglet a un bandeau de couleur (icône + titre) ; ancien en-tête gardé en secours */
+        var nomOng = titreOng.replace(/^[^A-Za-zÀ-ÿ]+/, '');
+        var bloc = await guetter(function () {
+          var b = [].find.call(D.body.querySelectorAll('div'), function (d) {
+            if (d.closest('#bw-cr-complet')) return false;
+            var st = d.getAttribute('style') || '';
+            if (!/text-transform: uppercase/.test(st) || !/letter-spacing: 1px/.test(st)) return false;
+            var x = d.textContent.trim();
+            return x.length < 40 && x.slice(-nomOng.length) === nomOng && d.parentElement && d.parentElement.parentElement;
+          });
+          if (b) return b.parentElement.parentElement;
+          var tl = [].find.call(D.body.querySelectorAll('span'), function (e) {
+            if (e.children.length || e.textContent.trim() !== titreOng) return false;
+            var g = e.parentElement && e.parentElement.parentElement; if (!g) return false;
+            var x = g.innerText.trim();
+            return x.length < 40 && x === x.toUpperCase();
+          });
+          return tl && tl.parentElement.parentElement.parentElement;
+        }, 2000);
+        if (!bloc) continue;
+        await pause();
+        var cl = figer(bloc);
+        cl.style.cssText = 'background:#fff;border:1px solid #E3ECF5;border-radius:16px;padding:22px 26px;margin-top:16px';
+        /* pied de l'écran (bandeau « clôturée », total, « déjà facturé », case « réglée sur place ») : montré une seule fois, en haut */
+        [].forEach.call(cl.querySelectorAll('div'), function (c) { var x = c.textContent.trim(); if (x.length < 300 && /^(✓ Intervention terminée|Total estimé|✓ Déjà facturé|Réglée sur place|[＋+] ?Ajouter)/.test(x)) c.style.display = 'none'; });
+        box.appendChild(cl);
       }
-      if (t !== tour) return;
-      if (!pret) { cadre('Document indisponible', '<div style="color:#fff">L’application ne s’est pas chargée (connexion ?).</div>'); return; }
-      var S = L.state, W = app.contentWindow, id = '', titre = '';
+      L.setState({ crPanelOuvert: false, crSousOnglet: null });
+      box.id = 'bw-cr-complet';
+      box.style.cssText = 'position:absolute;left:0;top:0;width:760px;background:#fff;pointer-events:none';
+      D.body.appendChild(box);
+      return box;
+    }
+    /* fabrique la copie d'un document à partir de l'application cachée ; une seule fabrication à la fois (file d'attente) */
+    var CACHE = {}, file = Promise.resolve();
+    function fabriquer(doc) { var p = file.then(function () { return fabriquer1(doc); }); file = p.catch(function () {}); return p; }
+    async function appPrete() {
+      chargerApp();
+      var L = await guetter(function () {
+        var l = logique();
+        try { var SB = app.contentWindow.BWSupabase; if (l && SB && SB.ready && !(l.state.clientsList || []).length && Date.now() - (appPrete.relu || 0) > 8000) { appPrete.relu = Date.now(); SB.pullAll(); } } catch (e) {}
+        return l && (l.state.facturesList || []).length && (l.state.clientsList || []).length && app.contentWindow.document.body.classList.contains('bw-splash-fini') && l;
+      }, 60000);
+      return L;
+    }
+    async function fabriquer1(doc) {
+      var L = await appPrete();
+      if (!L) return { erreur: 'Document indisponible', msg: 'L’application ne s’est pas chargée (connexion ?).' };
+      var S = L.state, W = app.contentWindow, id = '', titre = '', crBloc = null;
       var RAZ = { factureApercu: null, devisApercu: null, crApercuId: null, bilanCptOuvert: false, crPanelOuvert: false, histoDetailId: null, clientId: null };
       var avec = function (o) { var x = {}, a; for (a in RAZ) x[a] = RAZ[a]; for (a in o) x[a] = o[a]; return x; };
       var parNum = function (l) { return (l || []).slice().sort(function (a, b) { return String(b.num || '').localeCompare(String(a.num || '')); }); };
       var nomCli = function (id) { return ((S.clientsList || []).find(function (c) { return c.id === id; }) || {}).nom || ''; };
+      var dernierRdv = function () { return (S.rdvs || []).filter(function (x) { return /termin/i.test(x.statut || ''); }).sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); })[0]; };
       if (doc === 'facture') { var f = parNum(S.facturesList)[0]; L.setState(avec({ screen: 'factures', factureApercu: f.id, factureMode: 'visu' })); id = 'bw-sheet-facture'; titre = '🧾 Facture ' + f.num + ' — ' + nomCli(f.clientId); }
-      else if (doc === 'devis') { var d = parNum(S.devisList)[0]; if (!d) { cadre('Aucun devis', ''); return; } L.setState(avec({ screen: 'devis', devisApercu: d.id, devisMode: 'visu' })); id = 'bw-sheet-devis'; titre = '📝 Devis ' + d.num + ' — ' + nomCli(d.clientId); }
+      else if (doc === 'devis') { var d = parNum(S.devisList)[0]; if (!d) return { erreur: 'Aucun devis', msg: '' }; L.setState(avec({ screen: 'devis', devisApercu: d.id, devisMode: 'visu' })); id = 'bw-sheet-devis'; titre = '📝 Devis ' + d.num + ' — ' + nomCli(d.clientId); }
       else if (doc === 'cr') {
-        var r = (S.rdvs || []).filter(function (x) { return /termin/i.test(x.statut || ''); }).sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); })[0];
-        if (!r) { cadre('Aucun compte rendu', ''); return; }
-        var fa = (S.facturesList || []).find(function (x) { return x.num === r.facture; });
-        L.setState(avec({ screen: 'clients', clientId: r.clientId, histoDetailId: r.id, histoDetailFac: fa && fa.id })); id = 'bw-cr-histo';
+        /* (12/11/2026) « le même onglet que dans l'application, avec tous les onglets à l'intérieur du compte rendu, comme quand
+           je commence un RDV » : l'écran Comptes rendus du dernier RDV terminé (statut + tuiles), puis le contenu de CHAQUE onglet
+           (Analyse, Contrôles, Conformité, Mise en service, Obligation client, Compte rendu, Historique, Facturation) à la suite. */
+        var r = dernierRdv(); if (!r) return { erreur: 'Aucun compte rendu', msg: '' };
         titre = '📋 Compte rendu du ' + String(r.date || '').split('-').reverse().join('/') + ' — ' + (r.client || '');
+        crBloc = await crComplet(L, W, r, avec);
+        id = 'bw-cr-complet';
       }
-      else { L.setState(avec({ screen: 'compta', bilanCptOuvert: true })); id = 'bw-sheet-bilan'; titre = '📊 Bilan comptable ' + new Date().getFullYear(); }
-      var el = null;
-      for (var j = 0; j < 30; j++) { el = W.document.getElementById(id); if (el && el.getBoundingClientRect().width > 0) break; await attendre(200); }
-      await attendre(600);
-      if (t !== tour) return;
-      if (!el) { cadre(esc(titre), '<div style="color:#fff">Document introuvable.</div>'); return; }
+      else if (doc === 'crclient') {
+        /* (12/11/2026) « garde-moi ça aussi dans un autre onglet » : le compte rendu tel qu'il est envoyé au client (fiche client › historique) */
+        var rc = dernierRdv(); if (!rc) return { erreur: 'Aucun compte rendu', msg: '' };
+        var fc = (S.facturesList || []).find(function (x) { return x.num === rc.facture; });
+        L.setState(avec({ screen: 'clients', clientId: rc.clientId, histoDetailId: rc.id, histoDetailFac: fc && fc.id })); id = 'bw-cr-histo';
+        titre = '📨 Compte rendu client du ' + String(rc.date || '').split('-').reverse().join('/') + ' — ' + (rc.client || '');
+      }
+      else { L.setState(avec({ screen: 'compta', bilanCptOuvert: true })); id = 'bw-sheet-bilan-pro'; /* (12/11/2026) bilan unique depuis le build 104 */ titre = '📊 Bilan comptable ' + new Date().getFullYear(); }
+      var el = await guetter(function () { var e = W.document.getElementById(id); return e && e.getBoundingClientRect().width > 0 && e; }, 6000);
+      if (!el) return { erreur: esc(titre), msg: 'Document introuvable.' };
+      /* hauteur stable deux fois de suite (le contenu a fini de s'afficher) */
+      var hp = -1; for (var n = 0; n < 50; n++) { await pause(); var hh = el.scrollHeight; if (hh === hp && hh > 0) break; hp = hh; }
       /* (12/11/2026) « flou, pas assez visible, plus grand et mieux cadré » : plus d'image du PDF — le document lui-même
          (texte net à toute taille) est recopié sur une feuille blanche, agrandi raisonnablement (×1,4 au plus, 680 px de large au plus — « pas aussi gros »),
          sans boutons ni éléments de l'application. */
       var nat = Math.round(Math.max(el.scrollWidth, el.getBoundingClientRect().width));
       var cl = el.cloneNode(true);
+      if (crBloc) crBloc.remove();
       [].forEach.call(cl.querySelectorAll('button,[data-bw-interne],input[type=file]'), function (n) { n.remove(); });
       [].forEach.call(cl.querySelectorAll('*'), function (n) {
         var st = n.style;
@@ -134,36 +224,57 @@
         if (!n.children.length && /^\s*[✕×]\s*$/.test(n.textContent)) n.remove();
       });
       ['maxHeight', 'overflow', 'borderRadius', 'boxShadow', 'margin', 'maxWidth', 'transform'].forEach(function (p) { cl.style[p] = { maxHeight: 'none', overflow: 'visible', borderRadius: '0', boxShadow: 'none', margin: '0', maxWidth: 'none', transform: 'none' }[p]; });
-      cl.style.width = nat + 'px'; cl.removeAttribute('id');
+      cl.style.width = nat + 'px'; cl.style.position = 'static'; cl.style.pointerEvents = ''; cl.removeAttribute('id');
       var styles = [].map.call(W.document.querySelectorAll('style'), function (s) { return s.outerHTML; }).join('');
-      /* (12/11/2026) « à chaque clic l'aperçu zoome et revient à la normale » : la feuille reste invisible tant que sa taille
-         n'est pas stable (polices chargées, hauteur identique deux fois de suite), puis apparaît d'un coup à sa taille finale. */
-      var zone0 = papier.firstChild, attente = document.getElementById('pAtt');
+      var res = { titre: titre, html: cl.outerHTML, nat: nat, styles: styles, classe: W.document.documentElement.className };
+      CACHE[doc] = res;
+      return res;
+    }
+    /* affiche une feuille déjà fabriquée : invisible le temps de mesurer sa hauteur, puis d'un coup à sa taille finale
+       (« à chaque clic l'aperçu zoome et revient à la normale ») */
+    async function afficher(res, t) {
+      if (res.erreur) { cadre(res.erreur, '<div style="color:#fff">' + esc(res.msg) + '</div>'); return; }
+      cadre(esc(res.titre), '');
+      var zone0 = papier.firstChild;
       var Z = document.createElement('div'); Z.id = 'pZ'; Z.style.cssText = 'width:100%;max-width:680px;display:flex;justify-content:center;position:relative';
       zone0.appendChild(Z);
       var fr = document.createElement('iframe');
-      fr.title = titre; fr.style.cssText = 'border:0;background:#fff;display:block;box-shadow:0 8px 30px rgba(0,0,0,.4);border-radius:4px;position:absolute;top:0;visibility:hidden;opacity:0;transition:opacity .25s';
+      fr.title = res.titre; fr.style.cssText = 'border:0;background:#fff;display:block;box-shadow:0 8px 30px rgba(0,0,0,.4);border-radius:4px;visibility:hidden;pointer-events:none';
       Z.appendChild(fr);
-      var largeur = Math.min(680, Z.clientWidth, Math.round(nat * 1.4)), k = largeur / nat; fr.style.width = largeur + 'px'; Z.style.maxWidth = largeur + 'px';
+      var largeur = Math.min(680, Z.clientWidth || 680, Math.round(res.nat * 1.4)), k = largeur / res.nat; fr.style.width = largeur + 'px'; Z.style.maxWidth = largeur + 'px';
       var d = fr.contentDocument; d.open();
-      d.write('<!doctype html><html class="' + W.document.documentElement.className + '"><head><meta charset="utf-8">' + styles +
-        '<style>html,body{margin:0;background:#fff;overflow:hidden;font-family:"Public Sans",sans-serif;color:#14265C}#p{zoom:' + k + ';width:' + nat + 'px}</style></head>' +
-        '<body class="bw-pret bw-splash-fini"><div id="p"></div></body></html>');
+      d.write('<!doctype html><html class="' + res.classe + '"><head><meta charset="utf-8">' + res.styles +
+        '<style>html,body{margin:0;background:#fff;overflow:hidden;font-family:"Public Sans",sans-serif;color:#14265C}#p{zoom:' + k + ';width:' + res.nat + 'px}</style></head>' +
+        '<body class="bw-pret bw-splash-fini"><div id="p">' + res.html + '</div></body></html>');
       d.close();
-      d.getElementById('p').appendChild(d.importNode(cl, true));
+      /* (13/11/2026) « je n'arrive pas à monter et descendre quand la souris est sur les documents » puis « plus fluide » :
+         la feuille (lecture seule) laisse passer la souris et le doigt — c'est la page des aperçus qui défile, avec le
+         défilement natif et fluide du navigateur */
       var hPrec = -1;
-      for (var h = 0; h < 20; h++) {
-        await attendre(150); if (t !== tour) return;
-        try { await d.fonts.ready; } catch (e) {}
+      for (var h = 0; h < 40; h++) {
+        await pause(); if (t !== tour) return;
         var H = Math.ceil(d.getElementById('p').getBoundingClientRect().height);
         if (H === hPrec && H > 0) break; hPrec = H;
       }
-      fr.style.height = hPrec + 'px';
-      if (attente) attente.remove();
-      zone0.firstChild.firstChild.textContent = titre;
-      fr.style.position = 'static'; fr.style.visibility = 'visible';
-      requestAnimationFrame(function () { fr.style.opacity = '1'; });
+      fr.style.height = hPrec + 'px'; fr.style.visibility = 'visible';
+      try { d.fonts.ready.then(function () { var H2 = Math.ceil(d.getElementById('p').getBoundingClientRect().height); if (H2 > 0) fr.style.height = H2 + 'px'; }); } catch (e) {}
     }
+    async function surPapier(doc) {
+      var t = ++tour;
+      if (CACHE[doc]) {
+        await afficher(CACHE[doc], t);
+        /* remise à jour discrète : la feuille n'est remplacée que si le document a changé */
+        var avant = CACHE[doc].html;
+        fabriquer(doc).then(function (res) { if (t === tour && res && !res.erreur && res.html !== avant) afficher(res, t); });
+        return;
+      }
+      cadre('Préparation du document…', '<div id="pAtt" style="color:#fff;font-size:14px;opacity:.85;margin-top:40px">Le document est fabriqué à partir de vos vraies données (lecture seule).</div>');
+      var res = await fabriquer(doc);
+      if (t !== tour) return;
+      await afficher(res, t);
+    }
+    /* préparation à l'avance de tous les documents dès que l'application cachée est prête */
+    setTimeout(function () { ['facture', 'devis', 'cr', 'crclient', 'bilan'].forEach(function (k) { fabriquer(k); }); }, 1500);
     function ouvrir(b) {
       boutons.forEach(function (x) { x.setAttribute('aria-current', x === b ? 'true' : 'false'); });
       zone.className = b.getAttribute('data-tel') === '1' ? 'tel' : '';
