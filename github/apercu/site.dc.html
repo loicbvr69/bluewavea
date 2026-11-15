@@ -902,9 +902,9 @@
 
         <sc-if value="{{ ecAAppareil }}" hint-placeholder-val="{{ false }}">
           <!-- sous-onglets (même style que le menu du site) -->
-          <div class="bw-hide-sb" style="display: flex; justify-content: safe center; gap: 10px; margin-top: 18px; overflow-x: auto; padding-bottom: 2px">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 18px">
             <sc-for list="{{ ecOnglets }}" as="o" hint-placeholder-count="6">
-              <a onClick="{{ o.go }}" style="color: {{ o.col }}; cursor: pointer; background: {{ o.bg }}; border: 1.5px solid {{ o.bd }}; padding: 10px 18px; border-radius: 99px; font-weight: 700; font-size: 15px; flex-shrink: 0" style-hover="background: #DCEAF6; color: #14265C">{{ o.label }}</a>
+              <a onClick="{{ o.go }}" style="color: {{ o.col }}; cursor: pointer; background: {{ o.bg }}; border: 1.5px solid {{ o.bd }}; padding: 10px 12px; border-radius: 99px; font-weight: 700; font-size: 14.5px; text-align: center; white-space: nowrap; min-width: 0" style-hover="background: #DCEAF6; color: #14265C">{{ o.label }}</a>
             </sc-for>
           </div>
 
@@ -916,7 +916,7 @@
               <div style="font-size: 14px; font-weight: 700; color: #9CC8EC; letter-spacing: .6px">N° {{ ecA.serie }}</div>
             </div>
             <sc-for list="{{ ecA.infos }}" as="inf" hint-placeholder-count="4">
-              <div style="min-width: 0">
+              <div style="min-width: 0; display: flex; gap: 12px; align-items: flex-start"><span style="width: 36px; height: 36px; border-radius: 99px; background: rgba(156,200,236,.14); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0">{{ inf.ic }}</span><div style="min-width: 0">
                 <div style="font-size: 12px; font-weight: 800; letter-spacing: 1.2px; color: #9CC8EC; text-transform: uppercase">{{ inf.l }}</div>
                 <sc-if value="{{ inf.pastille }}" hint-placeholder-val="{{ false }}">
                   <div style="margin-top: 6px; display: flex"><span style="background: {{ inf.b }}; color: {{ inf.c }}; border-radius: 99px; padding: 5px 12px; font-size: 14.5px; font-weight: 800">{{ inf.v }}</span></div>
@@ -924,7 +924,7 @@
                 <sc-if value="{{ inf.texte }}" hint-placeholder-val="{{ true }}">
                   <div style="font-size: 16.5px; font-weight: 700; margin-top: 5px; line-height: 1.45">{{ inf.v }}</div>
                 </sc-if>
-              </div>
+              </div></div>
             </sc-for>
           </div>
           </sc-if>
@@ -1205,61 +1205,81 @@
 
           <!-- documents -->
           <sc-if value="{{ ecTDocs }}" hint-placeholder-val="{{ false }}">
-            <div style="margin-top: 22px; display: grid; gap: 26px">
-              <sc-if value="{{ ecAContrat }}" hint-placeholder-val="{{ false }}">
-                <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px">
-                  <span style="width: 46px; height: 46px; border-radius: 50%; background: #DCEBFA; border: none; display: grid; place-items: center; font-size: 20px; flex-shrink: 0">📜</span>
-                  <div style="min-width: 0; flex: 1 1 220px">
-                    <div style="font-size: 16.5px; font-weight: 800; color: {{ ecContrat.c }}">{{ ecContrat.titre }}</div>
-                    <div style="font-size: 14px; color: #4E687F; font-weight: 600; margin-top: 3px">{{ ecContrat.detail }}</div>
+            <div style="margin-top: 22px; display: grid; gap: 14px">
+              <!-- sous-onglets : un par type de document, ✓ sur celui choisi -->
+              <div style="display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 8px">
+                <sc-for list="{{ ecDocsOnglets }}" as="o" hint-placeholder-count="3">
+                  <a onClick="{{ o.go }}" style="color: {{ o.col }}; cursor: pointer; background: {{ o.bg }}; border: 1.5px solid {{ o.bd }}; padding: 9px 6px; border-radius: 12px; font-weight: 800; font-size: 13.5px; text-align: center; white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis" style-hover="border: 1.5px solid #2F7DD1">{{ o.label }}</a>
+                </sc-for>
+              </div>
+
+              <sc-if value="{{ ecDocsVoirFactures }}" hint-placeholder-val="{{ true }}">
+                <sc-if value="{{ ecSansFactures }}" hint-placeholder-val="{{ false }}">
+                  <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 14px; padding: 22px; text-align: center; font-size: 15px; font-weight: 700; color: #4E687F">📭 Aucune facture pour le moment.</div>
+                </sc-if>
+                <sc-for list="{{ ecFacturesPage }}" as="d" hint-placeholder-count="3">
+                  <div onClick="{{ d.ouvrir }}" style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 14px; padding: 13px 16px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 14px; align-items: center; cursor: pointer" style-hover="border: 1px solid #9CC8EC; background: #F4F9FD">
+                    <span style="width: 38px; height: 38px; border-radius: 50%; background: #DCEBFA; display: grid; place-items: center; font-size: 17px">🧾</span>
+                    <div style="min-width: 0">
+                      <div style="font-size: 15.5px; font-weight: 800; color: #14265C">{{ d.num }} · {{ d.date }}</div>
+                      <div style="font-size: 14px; color: #4E687F; font-weight: 600; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{ d.objet }}</div>
+                    </div>
+                    <div style="text-align: right">
+                      <div style="font-size: 16px; font-weight: 800; color: #14265C; white-space: nowrap">{{ d.total }}</div>
+                      <sc-if value="{{ d.ok }}" hint-placeholder-val="{{ true }}"><span style="display: inline-block; margin-top: 3px; background: #E2F5EA; color: #1F7A4D; border-radius: 99px; padding: 2px 9px; font-size: 12px; font-weight: 800">{{ d.statut }}</span></sc-if>
+                      <sc-if value="{{ d.attente }}" hint-placeholder-val="{{ false }}"><span style="display: inline-block; margin-top: 3px; background: #FBF1DD; color: #A96A10; border-radius: 99px; padding: 2px 9px; font-size: 12px; font-weight: 800">{{ d.statut }}</span></sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ ecFacturesPag.voir }}" hint-placeholder-val="{{ true }}">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 4px">
+                  <span onClick="{{ ecFacturesPag.prec }}" style="width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; font-weight: 800; background: {{ ecFacturesPag.precBg }}; color: {{ ecFacturesPag.precFg }}; cursor: pointer">‹</span>
+                  <span style="font-size: 14px; font-weight: 800; color: #14265C; min-width: 96px; text-align: center">{{ ecFacturesPag.txt }}</span>
+                  <span onClick="{{ ecFacturesPag.suiv }}" style="width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; font-weight: 800; background: {{ ecFacturesPag.suivBg }}; color: {{ ecFacturesPag.suivFg }}; cursor: pointer">›</span>
+                </div>
+                </sc-if>
+              </sc-if>
+
+              <sc-if value="{{ ecDocsVoirDevis }}" hint-placeholder-val="{{ false }}">
+                <sc-if value="{{ ecSansDevis }}" hint-placeholder-val="{{ false }}">
+                  <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 14px; padding: 22px; text-align: center; font-size: 15px; font-weight: 700; color: #4E687F">📭 Aucun devis pour le moment.</div>
+                </sc-if>
+                <sc-for list="{{ ecDevisPage }}" as="d" hint-placeholder-count="3">
+                  <div onClick="{{ d.ouvrir }}" style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 14px; padding: 13px 16px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 14px; align-items: center; cursor: pointer" style-hover="border: 1px solid #9CC8EC; background: #F4F9FD">
+                    <span style="width: 38px; height: 38px; border-radius: 50%; background: #DCEBFA; display: grid; place-items: center; font-size: 17px">📝</span>
+                    <div style="min-width: 0">
+                      <div style="font-size: 15.5px; font-weight: 800; color: #14265C">{{ d.num }} · {{ d.date }}</div>
+                      <div style="font-size: 14px; color: #4E687F; font-weight: 600; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{ d.objet }}</div>
+                    </div>
+                    <div style="text-align: right">
+                      <div style="font-size: 16px; font-weight: 800; color: #14265C; white-space: nowrap">{{ d.total }}</div>
+                      <sc-if value="{{ d.ok }}" hint-placeholder-val="{{ true }}"><span style="display: inline-block; margin-top: 3px; background: #E2F5EA; color: #1F7A4D; border-radius: 99px; padding: 2px 9px; font-size: 12px; font-weight: 800">{{ d.statut }}</span></sc-if>
+                      <sc-if value="{{ d.attente }}" hint-placeholder-val="{{ false }}"><span style="display: inline-block; margin-top: 3px; background: #FBF1DD; color: #A96A10; border-radius: 99px; padding: 2px 9px; font-size: 12px; font-weight: 800">{{ d.statut }}</span></sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ ecDevisPag.voir }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 4px">
+                  <span onClick="{{ ecDevisPag.prec }}" style="width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; font-weight: 800; background: {{ ecDevisPag.precBg }}; color: {{ ecDevisPag.precFg }}; cursor: pointer">‹</span>
+                  <span style="font-size: 14px; font-weight: 800; color: #14265C; min-width: 96px; text-align: center">{{ ecDevisPag.txt }}</span>
+                  <span onClick="{{ ecDevisPag.suiv }}" style="width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; font-weight: 800; background: {{ ecDevisPag.suivBg }}; color: {{ ecDevisPag.suivFg }}; cursor: pointer">›</span>
+                </div>
+                </sc-if>
+              </sc-if>
+
+              <sc-if value="{{ ecDocsVoirContrat }}" hint-placeholder-val="{{ false }}">
+                <div onClick="{{ ecContrat.ouvrir }}" style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 14px; padding: 16px 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; cursor: pointer" style-hover="border: 1px solid #9CC8EC; background: #F4F9FD">
+                  <span style="width: 38px; height: 38px; border-radius: 50%; background: #DCEBFA; display: grid; place-items: center; font-size: 17px; flex-shrink: 0">📜</span>
+                  <div style="min-width: 0; flex: 1 1 200px">
+                    <div style="font-size: 15.5px; font-weight: 800; color: {{ ecContrat.c }}">{{ ecContrat.titre }}</div>
+                    <div style="font-size: 14px; color: #4E687F; font-weight: 600; margin-top: 2px">{{ ecContrat.detail }}</div>
                   </div>
                   <sc-if value="{{ ecContrat.signe }}" hint-placeholder-val="{{ true }}">
-                    <span style="background: #E2F5EA; color: #1F7A4D; border-radius: 9px; padding: 7px 12px; font-size: 13px; font-weight: 800">Signé</span>
+                    <span style="background: #E2F5EA; color: #1F7A4D; border-radius: 99px; padding: 3px 10px; font-size: 12px; font-weight: 800">✓ Signé</span>
                   </sc-if>
+                  <span style="color: #2F7DD1; font-size: 14px; font-weight: 800; white-space: nowrap">Voir le contrat ›</span>
                 </div>
               </sc-if>
-              <div>
-                <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.2px; color: #2F7DD1">FACTURES</div>
-                <div style="display: grid; gap: 10px; margin-top: 12px">
-                  <sc-if value="{{ ecSansFactures }}" hint-placeholder-val="{{ false }}">
-                    <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 20px; font-size: 15px; color: #4E687F">Aucune facture.</div>
-                  </sc-if>
-                  <sc-for list="{{ ecFactures }}" as="d" hint-placeholder-count="2">
-                    <div onClick="{{ d.ouvrir }}" style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 16px 20px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 16px; align-items: center; cursor: pointer" style-hover="border: 1px solid #9CC8EC; background: #F4F9FD">
-                      <div style="min-width: 0">
-                        <div style="font-size: 15.5px; font-weight: 800; color: #14265C">{{ d.num }} · {{ d.date }}</div>
-                        <div style="font-size: 14px; color: #4E687F; font-weight: 600; margin-top: 2px">{{ d.objet }}</div>
-                      </div>
-                      <div style="text-align: right">
-                        <div style="font-size: 16.5px; font-weight: 800; color: #14265C">{{ d.total }}</div>
-                        <sc-if value="{{ d.ok }}" hint-placeholder-val="{{ true }}"><div style="font-size: 12.5px; font-weight: 800; color: #1F7A4D; margin-top: 2px">{{ d.statut }}</div></sc-if>
-                        <sc-if value="{{ d.attente }}" hint-placeholder-val="{{ false }}"><div style="font-size: 12.5px; font-weight: 800; color: #B0872B; margin-top: 2px">{{ d.statut }}</div></sc-if>
-                      </div>
-                    </div>
-                  </sc-for>
-                </div>
-              </div>
-              <div>
-                <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.2px; color: #2F7DD1">DEVIS</div>
-                <div style="display: grid; gap: 10px; margin-top: 12px">
-                  <sc-if value="{{ ecSansDevis }}" hint-placeholder-val="{{ false }}">
-                    <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 20px; font-size: 15px; color: #4E687F">Aucun devis.</div>
-                  </sc-if>
-                  <sc-for list="{{ ecDevis }}" as="d" hint-placeholder-count="1">
-                    <div onClick="{{ d.ouvrir }}" style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 16px 20px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 16px; align-items: center; cursor: pointer" style-hover="border: 1px solid #9CC8EC; background: #F4F9FD">
-                      <div style="min-width: 0">
-                        <div style="font-size: 15.5px; font-weight: 800; color: #14265C">{{ d.num }} · {{ d.date }}</div>
-                        <div style="font-size: 14px; color: #4E687F; font-weight: 600; margin-top: 2px">{{ d.objet }}</div>
-                      </div>
-                      <div style="text-align: right">
-                        <div style="font-size: 16.5px; font-weight: 800; color: #14265C">{{ d.total }}</div>
-                        <sc-if value="{{ d.ok }}" hint-placeholder-val="{{ true }}"><div style="font-size: 12.5px; font-weight: 800; color: #1F7A4D; margin-top: 2px">{{ d.statut }}</div></sc-if>
-                        <sc-if value="{{ d.attente }}" hint-placeholder-val="{{ false }}"><div style="font-size: 12.5px; font-weight: 800; color: #B0872B; margin-top: 2px">{{ d.statut }}</div></sc-if>
-                      </div>
-                    </div>
-                  </sc-for>
-                </div>
-              </div>
             </div>
           </sc-if>
 
@@ -1385,38 +1405,37 @@
     </div>
   </sc-if>
 
-  <!-- fenêtre : facture / devis -->
+  <!-- fenêtre : facture / devis / contrat (copie exacte du PDF de l’application) -->
   <sc-if value="{{ ecADoc }}" hint-placeholder-val="{{ false }}">
     <div style="position: fixed; inset: 0; z-index: 80; display: flex; align-items: center; justify-content: center; padding: 18px">
       <div onClick="{{ ecDoc.fermer }}" style="position: absolute; inset: 0; background: rgba(0,19,49,.6)"></div>
-      <div class="bw-hide-sb" style="position: relative; width: 100%; max-width: 640px; max-height: 100%; overflow-y: auto; overscroll-behavior: none; background: #fff; border-radius: 22px; box-shadow: 0 24px 60px rgba(0,19,49,.35)">
+      <div class="bw-hide-sb" style="position: relative; width: 100%; max-width: 760px; max-height: 100%; overflow-y: auto; overscroll-behavior: none; background: #fff; border-radius: 22px; box-shadow: 0 24px 60px rgba(0,19,49,.35)">
         <div style="position: sticky; top: 0; background: #fff; padding: 24px 60px 16px 28px; border-bottom: 1px solid #EEF3F9">
           <div style="font-size: 12.5px; font-weight: 800; letter-spacing: 1.4px; color: #2F7DD1">{{ ecDoc.genre }}</div>
           <div style="font-family: 'Playfair Display', serif; font-size: 25px; font-weight: 700; color: #001331; margin-top: 4px">{{ ecDoc.num }}</div>
           <div style="font-size: 14px; color: #4E687F; font-weight: 600; margin-top: 3px">{{ ecDoc.dates }}</div>
           <div onClick="{{ ecDoc.fermer }}" style="position: absolute; top: 18px; right: 18px; width: 36px; height: 36px; border-radius: 50%; background: #EDF4F9; color: #14265C; display: grid; place-items: center; font-weight: 800; cursor: pointer">✕</div>
         </div>
-        <div style="padding: 20px 28px 28px; display: grid; gap: 16px">
-          <div style="font-size: 15.5px; font-weight: 800; color: #14265C">{{ ecDoc.objet }}</div>
-          <sc-if value="{{ ecDoc.aLignes }}" hint-placeholder-val="{{ true }}">
-            <div style="border: 1px solid #DCEAF6; border-radius: 14px; overflow: hidden">
-              <sc-for list="{{ ecDoc.lignes }}" as="l" hint-placeholder-count="2">
-                <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #EEF3F9; font-size: 14.5px; color: #22405E">
-                  <span style="min-width: 0">{{ l.l }} <span style="color: #8A97B8">× {{ l.q }}</span></span>
-                  <span style="font-weight: 700; color: #14265C">{{ l.tot }}</span>
-                </div>
-              </sc-for>
+        <div style="padding: 18px 22px 22px; display: grid; gap: 14px; background: #F4F7FB">
+          <sc-if value="{{ ecDoc.charge }}" hint-placeholder-val="{{ false }}">
+            <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 14px; padding: 34px 20px; text-align: center; font-size: 15px; font-weight: 700; color: #4E687F">⏳ Ouverture du document…</div>
+          </sc-if>
+          <sc-if value="{{ ecDoc.absent }}" hint-placeholder-val="{{ false }}">
+            <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 14px; padding: 30px 22px; text-align: center">
+              <div style="font-size: 30px">📭</div>
+              <div style="font-size: 16px; font-weight: 800; color: #14265C; margin-top: 8px">Document pas encore disponible en ligne</div>
+              <div style="font-size: 14.5px; line-height: 1.6; color: #4E687F; margin-top: 6px">Il sera ajouté ici très prochainement. Besoin d’une copie tout de suite ? Appelez le 06 50 37 89 30 ou écrivez à contact@bluewavea.fr.</div>
             </div>
           </sc-if>
-          <sc-if value="{{ ecDoc.aDetail }}" hint-placeholder-val="{{ false }}">
-            <p style="font-size: 14.5px; line-height: 1.6; color: #4E687F; margin: 0; white-space: pre-wrap">{{ ecDoc.detail }}</p>
+          <sc-if value="{{ ecDoc.ok }}" hint-placeholder-val="{{ true }}">
+            <sc-for list="{{ ecDoc.pages }}" as="pg" hint-placeholder-count="1">
+              <img src="{{ pg.src }}" alt="Page {{ pg.n }}" style="display: block; width: 100%; height: auto; background: #fff; border: 1px solid #DCE8F2; border-radius: 6px; box-shadow: 0 4px 14px rgba(20,38,92,.08)" />
+            </sc-for>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px">
+              <button onClick="{{ ecDoc.telecharger }}" style="background: #14265C; color: #fff; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 15px; border: none; font-family: inherit; cursor: pointer" style-hover="background: #2F7DD1">⬇️ Télécharger le PDF</button>
+              <button onClick="{{ ecDoc.imprimer }}" style="background: #ffffff; color: #14265C; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 15px; border: 1px solid #DCEAF6; font-family: inherit; cursor: pointer" style-hover="background: #EDF4F9">🖨️ Imprimer</button>
+            </div>
           </sc-if>
-          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-top: 6px">
-            <span style="font-size: 15px; font-weight: 800; color: #14265C">Total</span>
-            <span style="font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #001331">{{ ecDoc.total }}</span>
-          </div>
-          <div style="font-size: 13px; color: #8A97B8">TVA non applicable, art. 293 B du CGI · {{ ecDoc.statut }}</div>
-          <button onClick="{{ ecDoc.imprimer }}" style="background: #EDF4F9; color: #14265C; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 15px; border: none; font-family: inherit; cursor: pointer" style-hover="background: #DCEAF6">🖨️ Imprimer / enregistrer en PDF</button>
         </div>
       </div>
     </div>
@@ -1495,7 +1514,7 @@ class Component extends DCLogic {
     rdvEnvoi: false, rdvErreur: '', rdvMailKo: false,
     cEnvoi: false, cErreur: '', cMailKo: false,
     ecEtape: 'email', ecEmail: '', ecCode: '', ecToken: null, ecDonnees: null, ecCharge: false, ecEnvoi: false, ecErreur: '',
-    ecIdx: 0, ecOnglet: 'accueil', ecOuvert: {}, ecAjout: false, ecSerie: '', ecPhoto: null, ecDoc: null,
+    ecIdx: 0, ecOnglet: 'accueil', ecDocsOnglet: 'factures', ecDocsPage: {}, ecOuvert: {}, ecAjout: false, ecSerie: '', ecPhoto: null, ecDoc: null,
     ecCmd: null, ecCmdQte: '1', ecCmdMsg: '', ecCmdOk: false,
     ecMdp: '', ecMdp2: '', ecCode2: '', ecOubli: false, ecTicket: null, ecA2fMode: '', ecTotpReset: false,
     ecSec: null, ecPrep: null, ecSecCode: '', ecSecMdp: '', ecSecOk: ''
@@ -1834,7 +1853,7 @@ class Component extends DCLogic {
   }
   _ecQuitter() {
     try { localStorage.removeItem('bw-espace-token'); } catch (e) {}
-    this.setState({ ecToken: null, ecDonnees: null, ecEtape: 'email', ecCode: '', ecMdp: '', ecMdp2: '', ecCode2: '', ecTicket: null, ecSec: null, ecPrep: null, ecIdx: 0, ecOnglet: 'accueil', ecOuvert: {}, ecAjout: false, ecDoc: null, ecCmd: null });
+    this.setState({ ecToken: null, ecDonnees: null, ecEtape: 'email', ecCode: '', ecMdp: '', ecMdp2: '', ecCode2: '', ecTicket: null, ecSec: null, ecPrep: null, ecIdx: 0, ecOnglet: 'accueil', ecDocsOnglet: 'factures', ecDocsPage: {}, ecOuvert: {}, ecAjout: false, ecDoc: null, ecCmd: null });
   }
   _ecCharger() {
     if (!this.state.ecToken || this._ecEnCours) return;
@@ -1844,6 +1863,48 @@ class Component extends DCLogic {
       .then(d => { this._ecEnCours = false; this.setState({ ecDonnees: d, ecCharge: false, ecErreur: '' }); })
       .catch(err => { this._ecEnCours = false; this.setState({ ecCharge: false, ecErreur: this._ecErreur(err) }); });
   }
+  /* (15/11/2026) « mets les vrais visuels » : le document affiché est la COPIE EXACTE du PDF préparé par l'application
+     (facture, devis, contrat — celui envoyé au client, signature comprise), demandé au serveur à l'ouverture
+     (action espace-doc), puis dessiné page par page. Rien d'autre n'est redessiné par le site. */
+  _ecDocOuvrir(vm, cle, serie) {
+    const jeton = (this._ecDocJeton = (this._ecDocJeton || 0) + 1);
+    this.setState({ ecDoc: { ...vm, cle, etat: 'charge', pages: [], pdf: null } });
+    this._service('espace-doc', { token: this.state.ecToken, num: cle, serie: serie || '' })
+      .then(r => (r && r.pdf) ? this._ecPdfPages(r.pdf).then(pages => ({ pdf: r.pdf, pages })) : Promise.reject('absent'))
+      .then(({ pdf, pages }) => { if (this._ecDocJeton === jeton && this.state.ecDoc) this.setState({ ecDoc: { ...this.state.ecDoc, etat: 'ok', pdf, pages } }); })
+      .catch(() => { if (this._ecDocJeton === jeton && this.state.ecDoc) this.setState({ ecDoc: { ...this.state.ecDoc, etat: 'absent' } }); });
+  }
+  _ecPdfLib() {
+    if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+    return new Promise((ok, ko) => {
+      const sc = document.createElement('script');
+      sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      sc.onload = () => { try { window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; } catch (e) {} ok(window.pdfjsLib); };
+      sc.onerror = ko; document.head.appendChild(sc);
+    });
+  }
+  _ecPdfOctets(b64) { const s = atob(String(b64).replace(/^data:[^,]*,/, '')); const u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return u; }
+  _ecPdfPages(b64) {
+    return this._ecPdfLib().then(lib => lib.getDocument({ data: this._ecPdfOctets(b64) }).promise).then(async doc => {
+      const out = [];
+      for (let i = 1; i <= Math.min(doc.numPages || 1, 30); i++) {
+        const page = await doc.getPage(i); const vp = page.getViewport({ scale: 2 });
+        const cv = document.createElement('canvas'); cv.width = Math.round(vp.width); cv.height = Math.round(vp.height);
+        /* intent « print » : le dessin ne dépend pas de l'affichage de l'onglet (onglet en arrière-plan = rendu quand même) */
+        await page.render({ canvasContext: cv.getContext('2d'), viewport: vp, intent: 'print' }).promise;
+        out.push({ src: cv.toDataURL('image/jpeg', 0.9), n: i });
+      }
+      return out;
+    });
+  }
+  _ecPdfUrl(doc) { return URL.createObjectURL(new Blob([this._ecPdfOctets(doc.pdf)], { type: 'application/pdf' })); }
+  _ecTelecharger(doc) {
+    if (!doc || !doc.pdf) return;
+    const a = document.createElement('a'); a.href = this._ecPdfUrl(doc);
+    a.download = 'BlueWavea_' + String(doc.cle === 'CONTRAT' ? 'Contrat' : doc.num).replace(/[^\w\-]+/g, '_') + '.pdf';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  _ecImprimerPdf(doc) { if (doc && doc.pdf) window.open(this._ecPdfUrl(doc), '_blank'); }
   _ecImprimer(doc) {
     const w = window.open('', '_blank');
     if (!w) return;
@@ -1906,7 +1967,7 @@ class Component extends DCLogic {
     const listeDocs = (arr, genre) => (arr || []).map(x => ({
       num: x.num, date: x.date, objet: x.objet, total: this._ecEur(x.total), statut: x.statut,
       ok: /payée|accepté|facturé/i.test(x.statut), attente: !/payée|accepté|facturé/i.test(x.statut),
-      ouvrir: () => this.setState({ ecDoc: docVM(x, genre) }),
+      ouvrir: () => this._ecDocOuvrir(docVM(x, genre), String(x.num || '').toUpperCase(), a && a.serie),
     }));
     const periodes = (a && a.conso && a.conso.periodes) || [];
     const maxE = Math.max(1, ...periodes.map(p => p.m3)), maxS = Math.max(0.01, ...periodes.map(p => p.selKg || 0));
@@ -2045,14 +2106,14 @@ class Component extends DCLogic {
       ecA: a ? {
         appareil: a.appareil, serie: a.serie,
         infos: [
-          { l: 'Mise en service', v: a.dateMes || '—' },
-          { l: 'Date d’achat', v: a.dateAchat || '—' },
-          { l: 'Adresse', v: a.adresse || '—' },
-          { l: 'Contrat', v: a.contrat ? a.contrat.formule + ' · ' + a.contrat.prix : 'Aucun contrat', pastille: !!a.contrat, c: a.contrat && /TOUT/i.test(a.contrat.formule) ? '#8A54C4' : '#B0872B', b: a.contrat && /TOUT/i.test(a.contrat.formule) ? '#F3ECFB' : '#FBF3DF' },
-          { l: 'Prochain entretien', v: a.prochain ? (a.prochain.confirme ? a.prochain.date + (a.prochain.heure ? ' à ' + a.prochain.heure : '') + ' (rendez-vous confirmé)' : 'À prévoir vers le ' + a.prochain.date) : '—' },
+          { l: 'Mise en service', ic: '💧', v: a.dateMes || '—' },
+          { l: 'Date d’achat', ic: '🛒', v: a.dateAchat || '—' },
+          { l: 'Adresse', ic: '📍', v: a.adresse || '—' },
+          { l: 'Contrat', ic: '📄', v: a.contrat ? a.contrat.formule + ' · ' + a.contrat.prix : 'Aucun contrat', pastille: !!a.contrat, c: a.contrat && /TOUT/i.test(a.contrat.formule) ? '#8A54C4' : '#B0872B', b: a.contrat && /TOUT/i.test(a.contrat.formule) ? '#F3ECFB' : '#FBF3DF' },
+          { l: 'Prochain entretien', ic: '🗓️', v: a.prochain ? (a.prochain.confirme ? a.prochain.date + (a.prochain.heure ? ' à ' + a.prochain.heure : '') + ' (rendez-vous confirmé)' : 'À prévoir vers le ' + a.prochain.date) : '—' },
         ].map(x => ({ ...x, pastille: !!x.pastille, texte: !x.pastille })),
       } : { appareil: '', serie: '', infos: [] },
-      ecOnglets: [['accueil', 'Mon compte'], ['inter', 'Interventions'], ['conso', 'Consommation'], ['docs', 'Documents'], ['articles', 'Consommables'], ['secu', 'Sécurité']].map(([k, l]) => ({ label: l, col: s.ecOnglet === k ? '#ffffff' : '#2F7DD1', bg: s.ecOnglet === k ? '#2F7DD1' : '#EAF2FB', bd: s.ecOnglet === k ? '#2F7DD1' : '#EAF2FB', actif: s.ecOnglet === k, inactif: s.ecOnglet !== k, go: () => { this.setState({ ecOnglet: k, ecCmdOk: false, ecSecOk: '', ecErreur: '', ecMdp: '', ecMdp2: '', ecSecMdp: '' }); if (k === 'secu') this._ecSecurite(); } })),
+      ecOnglets: [['accueil', 'Mon compte', '🏠'], ['inter', 'Interventions', '🔧'], ['conso', 'Consommation', '📈'], ['docs', 'Documents', '📄'], ['articles', 'Consommables', '🧂'], ['secu', 'Sécurité', '🔒']].map(([k, l, ic]) => ({ label: (s.ecOnglet === k ? '✓ ' : ic + ' ') + l, col: s.ecOnglet === k ? '#ffffff' : '#2F7DD1', bg: s.ecOnglet === k ? '#2F7DD1' : '#EAF2FB', bd: s.ecOnglet === k ? '#2F7DD1' : '#EAF2FB', actif: s.ecOnglet === k, inactif: s.ecOnglet !== k, go: () => { this.setState({ ecOnglet: k, ecCmdOk: false, ecSecOk: '', ecErreur: '', ecMdp: '', ecMdp2: '', ecSecMdp: '' }); if (k === 'secu') this._ecSecurite(); } })),
       ecTAccueil: s.ecOnglet === 'accueil',
       ecTInter: s.ecOnglet === 'inter', ecTConso: s.ecOnglet === 'conso', ecTDocs: s.ecOnglet === 'docs', ecTArticles: s.ecOnglet === 'articles',
       ecSansInter: !!a && !a.interventions.length,
@@ -2106,11 +2167,35 @@ class Component extends DCLogic {
         hEau: Math.max(2, Math.round(p.m3 / maxE * 150)) + 'px', hSel: Math.max(2, Math.round((p.selKg || 0) / maxS * 150)) + 'px',
       })),
       ecAContrat: !!(a && a.contrat),
-      ecContrat: a && a.contrat ? { titre: 'Contrat ' + a.contrat.formule + ' — ' + a.contrat.prix, detail: a.contrat.signeLe ? 'Signé le ' + a.contrat.signeLe : 'Contrat d’entretien annuel', signe: !!a.contrat.signe, c: /TOUT/i.test(a.contrat.formule) ? '#8A54C4' : '#B0872B' } : { titre: '', detail: '', signe: false, c: '#14265C' },
+      ecContrat: a && a.contrat ? { titre: 'Contrat ' + a.contrat.formule + ' — ' + a.contrat.prix, detail: a.contrat.signeLe ? 'Signé le ' + a.contrat.signeLe : 'Contrat d’entretien annuel', signe: !!a.contrat.signe, c: /TOUT/i.test(a.contrat.formule) ? '#8A54C4' : '#B0872B', ouvrir: () => this._ecDocOuvrir({ genre: 'CONTRAT', num: 'Contrat ' + a.contrat.formule, dates: a.contrat.signeLe ? 'Signé le ' + a.contrat.signeLe : 'Contrat d’entretien annuel · ' + a.contrat.prix }, 'CONTRAT', a.serie) } : { titre: '', detail: '', signe: false, c: '#14265C', ouvrir: () => {} },
       ecFactures: listeDocs(a && a.factures, 'FACTURE'), ecSansFactures: !!a && !a.factures.length,
       ecDevis: listeDocs(a && a.devis, 'DEVIS'), ecSansDevis: !!a && !a.devis.length,
+      /* (15/11/2026) Documents : sous-onglets par type + pages de 5 */
+      ...(() => {
+        const nF = a ? a.factures.length : 0, nD = a ? a.devis.length : 0, aC = !!(a && a.contrat);
+        const ong = s.ecDocsOnglet || 'factures';
+        const P = 5, page = s.ecDocsPage || {};
+        const decoupe = (cle, liste) => {
+          const nbp = Math.max(1, Math.ceil(liste.length / P)), p = Math.min(page[cle] || 0, nbp - 1);
+          const aller = (q) => this.setState(st => ({ ecDocsPage: { ...(st.ecDocsPage || {}), [cle]: q } }));
+          return { liste: liste.slice(p * P, p * P + P), pag: { voir: liste.length > 0, txt: 'Page ' + (p + 1) + ' / ' + nbp,
+            prec: () => { if (p > 0) aller(p - 1); }, suiv: () => { if (p < nbp - 1) aller(p + 1); },
+            precBg: p > 0 ? '#14265C' : '#EDF2F8', precFg: p > 0 ? '#ffffff' : '#A9B4CC', suivBg: p < nbp - 1 ? '#14265C' : '#EDF2F8', suivFg: p < nbp - 1 ? '#ffffff' : '#A9B4CC' } };
+        };
+        const f = decoupe('factures', listeDocs(a && a.factures, 'FACTURE')), dv = decoupe('devis', listeDocs(a && a.devis, 'DEVIS'));
+        const onglets = [['factures', '🧾', 'Facture', nF], ['devis', '📝', 'Devis', nD]].concat(aC ? [['contrat', '📜', 'Contrat', -1]] : []);
+        return {
+          ecDocsOnglets: onglets.map(([k, ic, l, n]) => ({
+            label: (ong === k ? '✓ ' : ic + ' ') + (n < 0 ? l : (l === 'Devis' ? 'Devis' : (n > 1 ? l + 's' : l)) + ' · ' + n),
+            col: ong === k ? '#ffffff' : '#14265C', bg: ong === k ? '#14265C' : '#ffffff', bd: ong === k ? '#14265C' : '#DCEAF6',
+            go: () => this.setState({ ecDocsOnglet: k }),
+          })),
+          ecDocsVoirFactures: ong === 'factures', ecDocsVoirDevis: ong === 'devis', ecDocsVoirContrat: ong === 'contrat' && aC,
+          ecFacturesPage: f.liste, ecFacturesPag: f.pag, ecDevisPage: dv.liste, ecDevisPag: dv.pag,
+        };
+      })(),
       ecADoc: !!s.ecDoc,
-      ecDoc: s.ecDoc ? { ...s.ecDoc, fermer: () => this.setState({ ecDoc: null }), imprimer: () => this._ecImprimer(s.ecDoc) } : { lignes: [] },
+      ecDoc: s.ecDoc ? { ...s.ecDoc, charge: s.ecDoc.etat === 'charge', ok: s.ecDoc.etat === 'ok', absent: s.ecDoc.etat === 'absent', pages: s.ecDoc.pages || [], fermer: () => { this._ecDocJeton = (this._ecDocJeton || 0) + 1; this.setState({ ecDoc: null }); }, telecharger: () => this._ecTelecharger(s.ecDoc), imprimer: () => this._ecImprimerPdf(s.ecDoc) } : { pages: [] },
       ecArticles: ARTS.map(ar => ({ ...ar, aLien: /^https?:\/\//.test(ar.lien), commander: () => this.setState({ ecCmd: ar.nom, ecCmdQte: '1', ecCmdMsg: '', ecErreur: '', ecCmdOk: false }) })),
       ecCmdOk: !!s.ecCmdOk,
       ecCommandes: (a ? a.commandes : []).map(k => ({ article: k.article, quantite: k.quantite, le: k.le, etat: k.etat === 'traitee' ? 'traitée' : 'en cours' })),

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contrats — modèles réels</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#F6F7F9;font-family:'Public Sans',system-ui,sans-serif;color:#14265C}
+  .wrap{padding:26px 30px 48px;display:flex;flex-direction:column;gap:22px}
+  h1{font-size:20px;font-weight:900;margin:0}
+  .sous{font-size:13.5px;color:#5B6B94;margin-top:4px}
+  .onglets{display:flex;gap:8px;flex-wrap:wrap}
+  .onglets button{font:inherit;font-size:13px;font-weight:800;border-radius:99px;padding:7px 14px;cursor:pointer;border:1.5px solid #DCE8F2;background:#fff;color:#5B6B94}
+  .onglets button.on{border-color:#14265C;background:#14265C;color:#fff}
+  .rang{display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start}
+  .cadre{display:flex;flex-direction:column;gap:10px;max-width:100%}
+  .tag{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#5B6B94}
+  .tag b{color:#fff;font-size:12px;font-weight:800;padding:4px 10px;border-radius:99px}
+  iframe{border:0;background:#fff;border-radius:16px;box-shadow:0 10px 34px rgba(20,38,92,.12);display:block;max-width:100%}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <h1>Contrats — modèles réels de l’application</h1>
+    <div class="sous">Les vrais modèles utilisés par l’application (champs client vides). Lecture seule : rien n’est enregistré ni envoyé.</div>
+  </div>
+  <div class="onglets" id="onglets"></div>
+  <div id="zone"></div>
+</div>
+<script src="bw-contrats.js"></script>
+<script>
+(function () {
+  var F = [
+    { k: 'premium', nom: 'PREMIUM', c: '#B0872B' },
+    { k: 'tout', nom: 'TOUT INCLUS', c: '#8A54C4' },
+    { k: 'premiumPro', nom: 'PREMIUM PRO', c: '#B0872B' },
+    { k: 'toutPro', nom: 'TOUT INCLUS PRO', c: '#8A54C4' }
+  ];
+  var choix = 'premium';
+  function cadre(f, largeur, label, sous) {
+    var d = document.createElement('div'); d.className = 'cadre'; d.style.width = largeur + 'px';
+    d.innerHTML = '<div class="tag"><b style="background:#14265C">' + label + '</b><b style="background:' + f.c + '">' + f.nom + '</b>' + sous + '</div>';
+    var fr = document.createElement('iframe'); fr.style.width = largeur + 'px'; fr.style.height = '1200px'; fr.setAttribute('scrolling', 'no');
+    fr.srcdoc = (window.BWContrats || {})[f.k] || '<p style="font-family:sans-serif;padding:20px">Modèle introuvable.</p>';
+    fr.onload = function () { try { var h = fr.contentDocument.documentElement.scrollHeight; fr.style.height = h + 'px'; } catch (e) {} };
+    d.appendChild(fr); return d;
+  }
+  /* (15/11/2026) une seule formule à la fois (bureau + mobile) : ouverture deux fois plus rapide */
+  function rendre() {
+    var z = document.getElementById('zone'); z.innerHTML = '';
+    var f = F.filter(function (x) { return x.k === choix; })[0] || F[0];
+    var r = document.createElement('div'); r.className = 'rang';
+    r.appendChild(cadre(f, 820, 'Bureau', 'largeur A4'));
+    r.appendChild(cadre(f, 390, 'Mobile', 'largeur iPhone'));
+    z.appendChild(r);
+    var o = document.getElementById('onglets'); o.innerHTML = '';
+    F.forEach(function (x) {
+      var b = document.createElement('button'); b.textContent = (choix === x.k ? '✓ ' : '') + x.nom; if (choix === x.k) b.className = 'on';
+      b.onclick = function () { choix = x.k; rendre(); }; o.appendChild(b);
+    });
+  }
+  rendre();
+})();
+</script>
+</body>
+</html>

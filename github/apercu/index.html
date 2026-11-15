@@ -33,9 +33,19 @@
     button { white-space: nowrap; padding: 8px 10px; font-size: 13px; }
     main.tel iframe { width: 100%; height: 100%; border-radius: 0; box-shadow: none; }
   }
+  /* (14/11/2026) « sur le tel l'aperçu me cache le visuel » : la mention lecture seule sort de l'application
+     (plus rien par-dessus les écrans) : en bas du menu sur ordinateur, bande au-dessus de l'aperçu sur téléphone */
+  #ro { position: fixed; left: 12px; bottom: 12px; width: 208px; z-index: 20; background: #C2362F; color: #fff; font: 800 11px system-ui, sans-serif; letter-spacing: .2px; line-height: 1.35; padding: 8px 11px; border-radius: 10px; text-align: center; }
+  nav { padding-bottom: 70px; }
+  @media (max-width: 760px) {
+    #ro { position: static; width: auto; border-radius: 0; padding: 5px 10px; font-size: 10.5px; flex-shrink: 0; }
+    nav { padding-bottom: 8px; align-items: center; }
+    #v107m { white-space: nowrap !important; flex-shrink: 0; margin: 0 !important; padding: 6px 10px !important; align-self: center; }
+  }
 </style>
 </head>
 <body>
+<div id="ro">🔒 APERÇU — lecture seule : rien n’est enregistré ni envoyé</div>
 <nav aria-label="Projets">
   <div class="marque">BlueWavea</div>
   <div class="sous">Aperçus — utilisation seule</div>
@@ -46,7 +56,7 @@
   <div class="titre">Site et documents</div>
   <button data-src="site.dc.html" data-tel="0">🌐 Site (maquette)</button>
   <button data-src="espace-client.dc.html" data-tel="0">👤 Espace client</button>
-  <button data-src="contrat.dc.html" data-tel="0">✍️ Contrat (modèle)</button>
+  <button data-src="contrats-modeles.html" data-tel="0">✍️ Contrat / Devis / Facture</button>
   <div class="titre">Documents — vrais, sur papier</div>
   <button data-src="../pc/" data-tel="0" data-doc="facture">🧾 Facture</button>
   <button data-src="../pc/" data-tel="0" data-doc="devis">📝 Devis</button>
@@ -68,8 +78,6 @@
        (#docapp), préchargée en arrière-plan dès l'ouverture de la page et jamais remplacée par les autres aperçus ; le
        document n'est recopié qu'une fois l'application entièrement prête (fin de l'écran de démarrage). */
     var papier = document.getElementById('papier'), app = document.getElementById('docapp'), tour = 0;
-    /* (13/11/2026) l'application cachée relit le cloud même quand la page n'est pas au premier plan (sinon : « je vois rien ») */
-    app.addEventListener('load', function () { try { Object.defineProperty(app.contentWindow.document, 'hidden', { configurable: true, get: function () { return false; } }); } catch (e) {} });
     function chargerApp() { if (!app.getAttribute('src')) app.src = '../pc/#papier'; }
     setTimeout(chargerApp, 1200);
     var attendre = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
@@ -109,14 +117,6 @@
           s.style.cssText = 'padding:9px 12px;border:1px solid #DCE8F2;border-radius:9px;font-size:13px;color:#14265C;background:#F7FAFD;white-space:pre-wrap;min-height:18px';
           c.replaceWith(s);
         });
-        /* le mode de règlement choisi (bouton foncé) reste visible en pastille ; les autres boutons disparaissent */
-        [].forEach.call(cl.querySelectorAll('button'), function (n) {
-          if (/^(💵 Espèces|🏦 Virement|📄 Chèque|💳 Carte)$/.test(n.textContent.trim()) && /20, 38, 92|#14265C/i.test(n.getAttribute('style') || '')) {
-            var p = D.createElement('span'); p.textContent = n.textContent.trim();
-            p.style.cssText = 'display:inline-block;background:#14265C;color:#fff;font-size:13px;font-weight:800;border-radius:99px;padding:7px 14px';
-            n.replaceWith(p);
-          }
-        });
         [].forEach.call(cl.querySelectorAll('button,[data-bw-interne],input[type=file]'), function (n) { n.remove(); });
         return cl;
       };
@@ -132,28 +132,17 @@
       for (var i = 0; i < ONG.length; i++) {
         L.setState({ crSousOnglet: ONG[i][0], crPanelOuvert: true });
         var titreOng = ONG[i][1];
-        /* (13/11/2026) build 106 : chaque onglet a un bandeau de couleur (icône + titre) ; ancien en-tête gardé en secours */
-        var nomOng = titreOng.replace(/^[^A-Za-zÀ-ÿ]+/, '');
-        var bloc = await guetter(function () {
-          var b = [].find.call(D.body.querySelectorAll('div'), function (d) {
-            if (d.closest('#bw-cr-complet')) return false;
-            var st = d.getAttribute('style') || '';
-            if (!/text-transform: uppercase/.test(st) || !/letter-spacing: 1px/.test(st)) return false;
-            var x = d.textContent.trim();
-            return x.length < 40 && x.slice(-nomOng.length) === nomOng && d.parentElement && d.parentElement.parentElement;
-          });
-          if (b) return b.parentElement.parentElement;
-          var tl = [].find.call(D.body.querySelectorAll('span'), function (e) {
+        var tl = await guetter(function () {
+          return [].find.call(D.body.querySelectorAll('span'), function (e) {
             if (e.children.length || e.textContent.trim() !== titreOng) return false;
             var g = e.parentElement && e.parentElement.parentElement; if (!g) return false;
             var x = g.innerText.trim();
             return x.length < 40 && x === x.toUpperCase();
           });
-          return tl && tl.parentElement.parentElement.parentElement;
         }, 2000);
-        if (!bloc) continue;
+        if (!tl) continue;
         await pause();
-        var cl = figer(bloc);
+        var cl = figer(tl.parentElement.parentElement.parentElement);
         cl.style.cssText = 'background:#fff;border:1px solid #E3ECF5;border-radius:16px;padding:22px 26px;margin-top:16px';
         /* pied de l'écran (bandeau « clôturée », total, « déjà facturé », case « réglée sur place ») : montré une seule fois, en haut */
         [].forEach.call(cl.querySelectorAll('div'), function (c) { var x = c.textContent.trim(); if (x.length < 300 && /^(✓ Intervention terminée|Total estimé|✓ Déjà facturé|Réglée sur place|[＋+] ?Ajouter)/.test(x)) c.style.display = 'none'; });
@@ -172,7 +161,6 @@
       chargerApp();
       var L = await guetter(function () {
         var l = logique();
-        try { var SB = app.contentWindow.BWSupabase; if (l && SB && SB.ready && !(l.state.clientsList || []).length && Date.now() - (appPrete.relu || 0) > 8000) { appPrete.relu = Date.now(); SB.pullAll(); } } catch (e) {}
         return l && (l.state.facturesList || []).length && (l.state.clientsList || []).length && app.contentWindow.document.body.classList.contains('bw-splash-fini') && l;
       }, 60000);
       return L;
@@ -291,6 +279,13 @@
     var depart = Array.prototype.find.call(boutons, function (b) { return b.getAttribute('data-src') + (b.getAttribute('data-doc') ? '#' + b.getAttribute('data-doc') : '') === der; }) || boutons[0];
     ouvrir(depart);
   })();
+</script>
+<script>
+/* (14/11/2026) la mention rouge interne à l'application est masquée dans l'aperçu : elle est affichée hors de l'écran (#ro) */
+(function () {
+  var masquer = function (f) { try { var d = f.contentDocument; if (!d || d.getElementById('bw-ro-css')) return; var st = d.createElement('style'); st.id = 'bw-ro-css'; st.textContent = '#bw-bandeau-apercu{display:none!important}'; (d.head || d.documentElement).appendChild(st); } catch (e) {} };
+  ['vue', 'docapp'].forEach(function (id) { var f = document.getElementById(id); if (!f) return; f.addEventListener('load', function () { masquer(f); }); setInterval(function () { masquer(f); }, 1500); });
+})();
 </script>
 </body>
 </html>
