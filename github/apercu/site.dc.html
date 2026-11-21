@@ -825,8 +825,8 @@
               <input type="password" autocomplete="new-password" value="{{ ecMdp2 }}" onChange="{{ setEcMdp2 }}" placeholder="Confirmez le mot de passe" style="background: #fff; border: 1px solid #CBDDEC; border-radius: 12px; padding: 15px; font-size: 16px; font-family: inherit; color: #001331" style-focus="border: 1px solid #2F7DD1; outline: none" />
               <div style="display: grid; gap: 5px; font-size: 13.5px; font-weight: 700">
                 <sc-for list="{{ ecRegles }}" as="rg" hint-placeholder-count="4">
-                  <sc-if value="{{ rg.ok }}" hint-placeholder-val="{{ false }}"><div style="color: #1F7A4D">✓ {{ rg.l }}</div></sc-if>
-                  <sc-if value="{{ rg.ko }}" hint-placeholder-val="{{ true }}"><div style="color: #8A97B8">○ {{ rg.l }}</div></sc-if>
+                  <sc-if value="{{ rg.ok }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; color: #1F7A4D"><span style="width: 18px; height: 18px; border-radius: 50%; background: #1F8A5B; color: #ffffff; display: grid; place-items: center; font-size: 11px; font-weight: 900; flex-shrink: 0">✓</span>{{ rg.l }}</div></sc-if>
+                  <sc-if value="{{ rg.ko }}" hint-placeholder-val="{{ true }}"><div style="display: flex; align-items: center; gap: 8px; color: #8A97B8"><span style="width: 18px; height: 18px; border-radius: 50%; background: #ffffff; border: 2px solid #CBD5E1; box-sizing: border-box; flex-shrink: 0"></span>{{ rg.l }}</div></sc-if>
                 </sc-for>
               </div>
               <sc-if value="{{ ecTotpReset }}" hint-placeholder-val="{{ false }}">
@@ -931,92 +931,92 @@
 
           <!-- interventions -->
           <sc-if value="{{ ecTInter }}" hint-placeholder-val="{{ true }}">
-            <div style="display: grid; gap: 14px; margin-top: 22px">
+            <div style="display: grid; gap: 12px; margin-top: 22px">
               <sc-if value="{{ ecSansInter }}" hint-placeholder-val="{{ false }}">
-                <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 26px; font-size: 15px; color: #4E687F; line-height: 1.6">Aucun compte rendu pour le moment. Il apparaît ici dès que votre intervention est validée et signée.</div>
+                <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 26px; text-align: center; font-size: 15px; color: #4E687F; line-height: 1.6">📭 Aucun compte rendu pour le moment.<br>Il apparaît ici dès que votre intervention est validée et signée.</div>
               </sc-if>
               <sc-for list="{{ ecInters }}" as="it" hint-placeholder-count="2">
-                <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; overflow: hidden">
-                  <div onClick="{{ it.basculer }}" style="display: flex; align-items: center; gap: 16px; padding: 20px 22px; cursor: pointer" style-hover="background: #F4F9FD">
-                    <span style="width: 46px; height: 46px; border-radius: 50%; background: #DCEBFA; border: none; display: grid; place-items: center; font-size: 20px; flex-shrink: 0">{{ it.icone }}</span>
+                <div style="background: #ffffff; border: 1px solid #E3ECF5; border-left: 4px solid {{ it.couleur }}; border-radius: 16px; overflow: hidden">
+                  <div onClick="{{ it.basculer }}" style="display: flex; align-items: center; gap: 14px; padding: 16px 18px; cursor: pointer" style-hover="background: #F4F9FD">
+                    <span style="width: 44px; height: 44px; border-radius: 50%; background: {{ it.teinte }}; display: grid; place-items: center; font-size: 20px; flex-shrink: 0">{{ it.icone }}</span>
                     <div style="min-width: 0; flex: 1">
-                      <div style="font-size: 16.5px; font-weight: 800; color: #14265C">{{ it.type }}</div>
-                      <div style="font-size: 14px; color: #4E687F; font-weight: 600; margin-top: 3px">{{ it.quand }}</div>
+                      <div style="font-size: 16px; font-weight: 800; color: #14265C">{{ it.type }}</div>
+                      <div style="font-size: 13.5px; color: #4E687F; font-weight: 600; margin-top: 2px">{{ it.quand }}</div>
                     </div>
-                    <span style="font-size: 14px; font-weight: 800; color: #2F7DD1; flex-shrink: 0">{{ it.fleche }}</span>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0">
+                      <sc-if value="{{ it.aSigne }}" hint-placeholder-val="{{ true }}"><span style="background: #E2F5EA; color: #1F7A4D; border-radius: 99px; padding: 2px 9px; font-size: 11.5px; font-weight: 800; white-space: nowrap">✓ Signé</span></sc-if>
+                      <span style="font-size: 13px; font-weight: 800; color: #2F7DD1; white-space: nowrap">{{ it.fleche }}</span>
+                    </div>
                   </div>
                   <sc-if value="{{ it.ouvert }}" hint-placeholder-val="{{ false }}">
-                    <div style="padding: 4px 22px 24px; display: grid; gap: 20px; border-top: 1px solid #EEF3F9">
+                    <div style="padding: 14px 16px 18px; display: grid; gap: 12px; border-top: 1px solid #EEF3F9; background: #FBFDFF">
                       <sc-if value="{{ it.aTexte }}" hint-placeholder-val="{{ true }}">
-                        <div style="padding-top: 18px">
-                          <div style="font-size: 12px; font-weight: 800; letter-spacing: 1.2px; color: #2F7DD1">COMPTE RENDU</div>
-                          <p style="font-size: 15.5px; line-height: 1.7; color: #22405E; margin: 8px 0 0; white-space: pre-wrap; text-wrap: pretty">{{ it.texte }}</p>
+                        <div style="border: 1px solid #E3ECF5; border-radius: 12px; overflow: hidden; background: #ffffff"><div style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 28px; height: 28px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 13px; flex-shrink: 0">📝</span><span style="flex: 1; min-width: 0; font-size: 12.5px; font-weight: 900; letter-spacing: .5px; color: #14265C">COMPTE RENDU</span><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 2px 9px; font-size: 11.5px; font-weight: 800; white-space: nowrap">{{ it.pillTexte }}</span></div>
+                          <p style="font-size: 15px; line-height: 1.65; color: #22405E; margin: 0; padding: 12px 14px; white-space: pre-wrap; text-wrap: pretty">{{ it.texte }}</p>
                         </div>
                       </sc-if>
                       <sc-if value="{{ it.aConso }}" hint-placeholder-val="{{ false }}">
-                        <div>
-                          <div style="font-size: 12px; font-weight: 800; letter-spacing: 1.2px; color: #2F7DD1">CONSOMMATION MOYENNE PAR MOIS</div>
-                          <div style="font-size: 13px; color: #4E687F; font-weight: 600; margin-top: 3px">{{ it.consoPeriode }}</div>
-                          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; margin-top: 10px">
+                        <div style="border: 1px solid #E3ECF5; border-radius: 12px; overflow: hidden; background: #ffffff"><div style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 28px; height: 28px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 13px; flex-shrink: 0">📈</span><span style="flex: 1; min-width: 0; font-size: 12.5px; font-weight: 900; letter-spacing: .5px; color: #14265C">CONSOMMATION MOYENNE PAR MOIS</span><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 2px 9px; font-size: 11.5px; font-weight: 800; white-space: nowrap">{{ it.pillConso }}</span></div>
+                          <div style="font-size: 12.5px; color: #4E687F; font-weight: 600; padding: 10px 14px 0">{{ it.consoPeriode }}</div>
+                          <div style="display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 14px 14px">
                             <sc-for list="{{ it.consoMois }}" as="cm" hint-placeholder-count="3">
-                              <div style="background: #EDF6FE; border: 1px solid #9CC8EC; border-radius: 12px; padding: 12px 14px; min-width: 0">
-                                <div style="font-size: 12.5px; font-weight: 700; color: #14265C">{{ cm.l }}</div>
-                                <div style="font-size: 18px; font-weight: 800; color: #14265C; margin-top: 3px">{{ cm.v }}</div>
+                              <div style="flex: 1 1 190px; display: flex; align-items: center; gap: 10px; background: #EDF6FE; border: 1px solid #CFE3F7; border-radius: 11px; padding: 10px 12px; min-width: 0">
+                                <span style="width: 30px; height: 30px; border-radius: 50%; background: #ffffff; display: grid; place-items: center; font-size: 14px; flex-shrink: 0">{{ cm.ico }}</span>
+                                <div style="min-width: 0"><div style="font-size: 12px; font-weight: 700; color: #4E687F">{{ cm.l }}</div><div style="font-size: 16px; font-weight: 800; color: #14265C; margin-top: 1px">{{ cm.v }}</div></div>
                               </div>
                             </sc-for>
                           </div>
                         </div>
                       </sc-if>
                       <sc-if value="{{ it.aMesures }}" hint-placeholder-val="{{ false }}">
-                        <div>
-                          <div style="font-size: 12px; font-weight: 800; letter-spacing: 1.2px; color: #2F7DD1">MESURES ET RÉGLAGES</div>
-                          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-top: 10px">
+                        <div style="border: 1px solid #E3ECF5; border-radius: 12px; overflow: hidden; background: #ffffff"><div style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 28px; height: 28px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 13px; flex-shrink: 0">🔬</span><span style="flex: 1; min-width: 0; font-size: 12.5px; font-weight: 900; letter-spacing: .5px; color: #14265C">MESURES ET RÉGLAGES</span><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 2px 9px; font-size: 11.5px; font-weight: 800; white-space: nowrap">{{ it.pillMesures }}</span></div>
+                          <div style="display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 14px 14px">
                             <sc-for list="{{ it.mesures }}" as="m" hint-placeholder-count="4">
-                              <div style="background: #F4F9FD; border: 1px solid #DCEAF6; border-radius: 12px; padding: 12px 14px; min-width: 0">
-                                <div style="font-size: 12.5px; font-weight: 700; color: #4E687F">{{ m.l }}</div>
-                                <div style="font-size: 17px; font-weight: 800; color: #14265C; margin-top: 3px">{{ m.v }}</div>
+                              <div style="flex: 1 1 140px; display: flex; align-items: center; gap: 10px; background: #F4F9FD; border: 1px solid #DCEAF6; border-radius: 11px; padding: 10px 12px; min-width: 0">
+                                <span style="width: 30px; height: 30px; border-radius: 50%; background: #ffffff; display: grid; place-items: center; font-size: 14px; flex-shrink: 0">{{ m.ico }}</span>
+                                <div style="min-width: 0"><div style="font-size: 12px; font-weight: 700; color: #4E687F">{{ m.l }}</div><div style="font-size: 16px; font-weight: 800; color: #14265C; margin-top: 1px">{{ m.v }}</div></div>
                               </div>
                             </sc-for>
                           </div>
                         </div>
                       </sc-if>
                       <sc-if value="{{ it.aControles }}" hint-placeholder-val="{{ false }}">
-                        <div>
-                          <div style="font-size: 12px; font-weight: 800; letter-spacing: 1.2px; color: #2F7DD1">CONTRÔLES EFFECTUÉS</div>
-                          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px 16px; margin-top: 10px">
+                        <div style="border: 1px solid #E3ECF5; border-radius: 12px; overflow: hidden; background: #ffffff"><div style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 28px; height: 28px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 13px; flex-shrink: 0">✅</span><span style="flex: 1; min-width: 0; font-size: 12.5px; font-weight: 900; letter-spacing: .5px; color: #14265C">CONTRÔLES EFFECTUÉS</span><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 2px 9px; font-size: 11.5px; font-weight: 800; white-space: nowrap">{{ it.pillControles }}</span></div>
+                          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0 16px; padding: 6px 14px 10px">
                             <sc-for list="{{ it.controles }}" as="ct" hint-placeholder-count="3">
-                              <div style="display: flex; gap: 9px; align-items: baseline; font-size: 15px; color: #22405E; min-width: 0"><span style="color: #1F7A4D; font-weight: 800">✓</span><span>{{ ct }}</span></div>
+                              <div style="display: flex; gap: 10px; align-items: center; font-size: 14.5px; color: #22405E; padding: 6px 0; min-width: 0"><span style="width: 24px; height: 24px; border-radius: 50%; background: #E2F5EA; color: #1F7A4D; display: grid; place-items: center; font-size: 12px; font-weight: 900; flex-shrink: 0">✓</span><span style="min-width: 0">{{ ct }}</span></div>
                             </sc-for>
                           </div>
                         </div>
                       </sc-if>
                       <sc-if value="{{ it.aPieces }}" hint-placeholder-val="{{ false }}">
-                        <div>
-                          <div style="font-size: 12px; font-weight: 800; letter-spacing: 1.2px; color: #2F7DD1">PIÈCES REMPLACÉES</div>
-                          <div style="display: grid; gap: 6px; margin-top: 10px">
+                        <div style="border: 1px solid #E3ECF5; border-radius: 12px; overflow: hidden; background: #ffffff"><div style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 28px; height: 28px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 13px; flex-shrink: 0">🔩</span><span style="flex: 1; min-width: 0; font-size: 12.5px; font-weight: 900; letter-spacing: .5px; color: #14265C">PIÈCES REMPLACÉES</span><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 2px 9px; font-size: 11.5px; font-weight: 800; white-space: nowrap">{{ it.pillPieces }}</span></div>
+                          <div style="display: grid; padding: 4px 14px 8px">
                             <sc-for list="{{ it.pieces }}" as="pc" hint-placeholder-count="1">
-                              <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px; color: #22405E"><span style="min-width: 0">{{ pc.nom }}</span><span style="font-weight: 700; flex-shrink: 0">× {{ pc.qte }}</span></div>
+                              <div style="display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid #F0F4F9; font-size: 14.5px; color: #22405E"><span style="width: 26px; height: 26px; border-radius: 50%; background: #FBF1DD; display: grid; place-items: center; font-size: 12px; flex-shrink: 0">🔩</span><span style="min-width: 0; flex: 1">{{ pc.nom }}</span><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 2px 9px; font-size: 12px; font-weight: 800; flex-shrink: 0">× {{ pc.qte }}</span></div>
                             </sc-for>
                           </div>
                         </div>
                       </sc-if>
                       <sc-if value="{{ it.aPhotos }}" hint-placeholder-val="{{ false }}">
-                        <div>
-                          <div style="font-size: 12px; font-weight: 800; letter-spacing: 1.2px; color: #2F7DD1">PHOTOS DE L'INTERVENTION</div>
-                          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px">
+                        <div style="border: 1px solid #E3ECF5; border-radius: 12px; overflow: hidden; background: #ffffff"><div style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 28px; height: 28px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 13px; flex-shrink: 0">📷</span><span style="flex: 1; min-width: 0; font-size: 12.5px; font-weight: 900; letter-spacing: .5px; color: #14265C">PHOTOS DE L’INTERVENTION</span><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 2px 9px; font-size: 11.5px; font-weight: 800; white-space: nowrap">{{ it.pillPhotos }}</span></div>
+                          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; padding: 12px 14px 14px">
                             <sc-for list="{{ it.photos }}" as="ph" hint-placeholder-count="3">
-                              <div onClick="{{ ph.voir }}" style="aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; border: 1px solid #DCEAF6; cursor: zoom-in; background: #F4F9FD">{{ ph.vignette }}</div>
+                              <div onClick="{{ ph.voir }}" style="aspect-ratio: 1 / 1; border-radius: 10px; overflow: hidden; border: 1px solid #DCEAF6; cursor: zoom-in; background: #F4F9FD">{{ ph.vignette }}</div>
                             </sc-for>
                           </div>
                         </div>
                       </sc-if>
                       <sc-if value="{{ it.aSigne }}" hint-placeholder-val="{{ false }}">
-                        <div style="display: inline-flex; align-items: center; gap: 8px; background: #E2F5EA; color: #1F7A4D; border-radius: 10px; padding: 9px 13px; font-size: 13.5px; font-weight: 800; justify-self: start">✓ Compte rendu signé le {{ it.signeLe }}</div>
+                        <div style="display: flex; align-items: center; gap: 10px; background: #E2F5EA; border: 1px solid #BFE3CE; color: #1F7A4D; border-radius: 11px; padding: 10px 12px; font-size: 13.5px; font-weight: 800"><span style="width: 26px; height: 26px; border-radius: 50%; background: #ffffff; display: grid; place-items: center; font-size: 12px; flex-shrink: 0">✍️</span><span>Compte rendu signé le {{ it.signeLe }}</span></div>
                       </sc-if>
                     </div>
                   </sc-if>
                 </div>
               </sc-for>
+              <sc-if value="{{ ecInterPied.voir }}" hint-placeholder-val="{{ true }}">
+                <div style="background: #14265C; color: #ffffff; border-radius: 12px; padding: 12px 16px; font-size: 14px; font-weight: 800">📌 {{ ecInterPied.txt }}</div>
+              </sc-if>
             </div>
           </sc-if>
 
@@ -1024,85 +1024,46 @@
           <sc-if value="{{ ecTConso }}" hint-placeholder-val="{{ false }}">
             <div style="margin-top: 22px; display: grid; gap: 18px">
               <sc-if value="{{ ecSansConso }}" hint-placeholder-val="{{ false }}">
-                <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 26px; font-size: 15px; color: #4E687F; line-height: 1.6">Le graphe apparaît dès qu'un compte rendu indique la capacité d'eau par régénération et le nombre de cycles (ou, pour un appareil sans compteur, le sel consommé).</div>
+                <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 26px; text-align: center; font-size: 15px; color: #4E687F; line-height: 1.6">📭 Pas encore de consommation calculée.<br>Elle apparaît dès qu'un compte rendu indique la capacité par régénération et le nombre de cycles (ou, sans compteur, le sel consommé).</div>
               </sc-if>
               <sc-if value="{{ ecAConso }}" hint-placeholder-val="{{ false }}">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px">
-                  <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 22px">
-                    <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.2px; color: #2F7DD1">EAU ADOUCIE</div>
-                    <div style="font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 700; color: #001331; margin-top: 6px">{{ ecEauAn }}</div>
-                    <div style="font-size: 14px; color: #4E687F; font-weight: 600">par an, en moyenne · {{ ecRegenAn }}</div>
-                  </div>
-                  <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 22px">
-                    <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.2px; color: #2F7DD1">SEL CONSOMMÉ (ESTIMATION)</div>
-                    <div style="font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 700; color: #001331; margin-top: 6px">{{ ecSelAn }}</div>
-                    <div style="font-size: 14px; color: #4E687F; font-weight: 600">{{ ecSelSous }}</div>
-                  </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px">
+                  <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; overflow: hidden; min-width: 0"><div style="display: flex; align-items: center; gap: 12px; padding: 16px 18px"><span style="width: 44px; height: 44px; border-radius: 50%; background: #EAF2FB; display: grid; place-items: center; font-size: 20px; flex-shrink: 0">💧</span><div style="flex: 1; min-width: 0"><div style="font-size: 12px; font-weight: 800; letter-spacing: 1px; color: #2F7DD1">EAU ADOUCIE</div><div style="font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 700; color: #001331; line-height: 1.15; margin-top: 2px">{{ ecEauAn }}</div><div style="font-size: 13px; color: #4E687F; font-weight: 600">par an, en moyenne · {{ ecRegenAn }}</div></div><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 3px 10px; font-size: 12px; font-weight: 800; white-space: nowrap; flex-shrink: 0; align-self: flex-start">Moyenne</span></div></div>
+                  <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; overflow: hidden; min-width: 0"><div style="display: flex; align-items: center; gap: 12px; padding: 16px 18px"><span style="width: 44px; height: 44px; border-radius: 50%; background: #EAF2FB; display: grid; place-items: center; font-size: 20px; flex-shrink: 0">🧂</span><div style="flex: 1; min-width: 0"><div style="font-size: 12px; font-weight: 800; letter-spacing: 1px; color: #2F7DD1">SEL CONSOMMÉ</div><div style="font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 700; color: #001331; line-height: 1.15; margin-top: 2px">{{ ecSelAn }}</div><div style="font-size: 13px; color: #4E687F; font-weight: 600">{{ ecSelSous }}</div></div><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 3px 10px; font-size: 12px; font-weight: 800; white-space: nowrap; flex-shrink: 0; align-self: flex-start">Estimation</span></div></div>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px">
-                  <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 22px; min-width: 0">
-                    <div style="font-size: 16px; font-weight: 800; color: #14265C">Eau adoucie entre deux visites</div>
-                    <div style="font-size: 13px; color: #4E687F; font-weight: 600; margin-top: 2px">m³, cycles × capacité par régénération</div>
-                    <div style="display: flex; align-items: flex-end; gap: 10px; height: 190px; margin-top: 18px; border-bottom: 1px solid #DCEAF6">
-                      <sc-for list="{{ ecBarres }}" as="b" hint-placeholder-count="3">
-                        <div style="flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px">
-                          <div style="font-size: 12.5px; font-weight: 800; color: #14265C">{{ b.eau }}</div>
-                          <div style="width: 100%; max-width: 56px; height: {{ b.hEau }}; background: #2F7DD1; border-radius: 8px 8px 0 0"></div>
-                        </div>
-                      </sc-for>
-                    </div>
-                    <div style="display: flex; gap: 10px; margin-top: 8px">
-                      <sc-for list="{{ ecBarres }}" as="b" hint-placeholder-count="3">
-                        <div style="flex: 1; min-width: 0; text-align: center; font-size: 11.5px; font-weight: 700; color: #4E687F; line-height: 1.35">{{ b.label }}</div>
-                      </sc-for>
-                    </div>
-                  </div>
-                  <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 22px; min-width: 0">
-                    <div style="font-size: 16px; font-weight: 800; color: #14265C">Sel consommé entre deux visites</div>
-                    <div style="font-size: 13px; color: #4E687F; font-weight: 600; margin-top: 2px">kg, régénérations × sel par régénération (volume de résine)</div>
-                    <div style="display: flex; align-items: flex-end; gap: 10px; height: 190px; margin-top: 18px; border-bottom: 1px solid #DCEAF6">
-                      <sc-for list="{{ ecBarres }}" as="b" hint-placeholder-count="3">
-                        <div style="flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px">
-                          <div style="font-size: 12.5px; font-weight: 800; color: #14265C">{{ b.sel }}</div>
-                          <div style="width: 100%; max-width: 56px; height: {{ b.hSel }}; background: #9CC8EC; border-radius: 8px 8px 0 0"></div>
-                        </div>
-                      </sc-for>
-                    </div>
-                    <div style="display: flex; gap: 10px; margin-top: 8px">
-                      <sc-for list="{{ ecBarres }}" as="b" hint-placeholder-count="3">
-                        <div style="flex: 1; min-width: 0; text-align: center; font-size: 11.5px; font-weight: 700; color: #4E687F; line-height: 1.35">{{ b.label }}</div>
-                      </sc-for>
-                    </div>
-                  </div>
+                  <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; overflow: hidden; min-width: 0"><div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 38px; height: 38px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 17px; flex-shrink: 0">📊</span><div style="flex: 1; min-width: 0"><div style="font-size: 15.5px; font-weight: 800; color: #14265C">Eau adoucie entre deux visites</div><div style="font-size: 12.5px; color: #4E687F; font-weight: 600; margin-top: 1px; line-height: 1.35">m³ · cycles × capacité par régénération</div></div><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 3px 10px; font-size: 12px; font-weight: 800; white-space: nowrap; flex-shrink: 0">{{ ecConsoN }}</span></div><div style="padding: 14px 18px 16px"><div style="display: flex; align-items: flex-end; gap: 10px; height: 170px; border-bottom: 1px solid #DCEAF6"><sc-for list="{{ ecBarres }}" as="b" hint-placeholder-count="3"><div style="flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px"><div style="font-size: 12.5px; font-weight: 800; color: #14265C">{{ b.eau }}</div><div style="width: 100%; max-width: 56px; height: {{ b.hEau }}; background: #2F7DD1; border-radius: 8px 8px 0 0"></div></div></sc-for></div><div style="display: flex; gap: 10px; margin-top: 8px"><sc-for list="{{ ecBarres }}" as="b" hint-placeholder-count="3"><div style="flex: 1; min-width: 0; text-align: center; font-size: 11.5px; font-weight: 700; color: #4E687F; line-height: 1.35">{{ b.label }}</div></sc-for></div></div></div>
+                  <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; overflow: hidden; min-width: 0"><div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 38px; height: 38px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 17px; flex-shrink: 0">🧂</span><div style="flex: 1; min-width: 0"><div style="font-size: 15.5px; font-weight: 800; color: #14265C">Sel consommé entre deux visites</div><div style="font-size: 12.5px; color: #4E687F; font-weight: 600; margin-top: 1px; line-height: 1.35">kg · régénérations × sel par régénération</div></div><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 3px 10px; font-size: 12px; font-weight: 800; white-space: nowrap; flex-shrink: 0">{{ ecConsoN }}</span></div><div style="padding: 14px 18px 16px"><div style="display: flex; align-items: flex-end; gap: 10px; height: 170px; border-bottom: 1px solid #DCEAF6"><sc-for list="{{ ecBarres }}" as="b" hint-placeholder-count="3"><div style="flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px"><div style="font-size: 12.5px; font-weight: 800; color: #14265C">{{ b.sel }}</div><div style="width: 100%; max-width: 56px; height: {{ b.hSel }}; background: #9CC8EC; border-radius: 8px 8px 0 0"></div></div></sc-for></div><div style="display: flex; gap: 10px; margin-top: 8px"><sc-for list="{{ ecBarres }}" as="b" hint-placeholder-count="3"><div style="flex: 1; min-width: 0; text-align: center; font-size: 11.5px; font-weight: 700; color: #4E687F; line-height: 1.35">{{ b.label }}</div></sc-for></div></div></div>
                 </div>
-                <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 22px; min-width: 0">
-                  <div style="font-size: 16px; font-weight: 800; color: #14265C">Détail par intervention</div>
-                  <div style="display: grid; gap: 10px; margin-top: 14px">
+                <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; overflow: hidden; min-width: 0"><div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 38px; height: 38px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 17px; flex-shrink: 0">🧾</span><div style="flex: 1; min-width: 0"><div style="font-size: 15.5px; font-weight: 800; color: #14265C">Détail par intervention</div><div style="font-size: 12.5px; color: #4E687F; font-weight: 600; margin-top: 1px; line-height: 1.35">Calculé à chaque compte rendu</div></div><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 3px 10px; font-size: 12px; font-weight: 800; white-space: nowrap; flex-shrink: 0">{{ ecConsoN }}</span></div>
+                  <div style="display: grid; gap: 10px; padding: 14px 18px">
                     <sc-for list="{{ ecTableau }}" as="tl" hint-placeholder-count="2">
-                      <div style="border: 1px solid #EEF3F9; border-radius: 14px; padding: 14px 16px; background: #F4F9FD">
-                        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 14px">
-                          <div style="font-size: 15px; font-weight: 800; color: #14265C">{{ tl.periode }}</div>
-                          <div style="font-size: 13px; font-weight: 700; color: #4E687F">{{ tl.source }}</div>
+                      <div style="border: 1px solid #EEF3F9; border-radius: 14px; padding: 12px 14px; background: #F4F9FD">
+                        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 14px">
+                          <div style="font-size: 14.5px; font-weight: 800; color: #14265C">📅 {{ tl.periode }}</div>
+                          <span style="background: #ffffff; border: 1px solid #DCE8F2; color: #4E687F; border-radius: 99px; padding: 2px 9px; font-size: 11.5px; font-weight: 800">{{ tl.source }}</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px 14px; margin-top: 10px">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 8px; margin-top: 10px">
                           <sc-for list="{{ tl.cols }}" as="tc" hint-placeholder-count="6">
-                            <div style="min-width: 0">
-                              <div style="font-size: 12px; font-weight: 700; color: #4E687F">{{ tc.l }}</div>
-                              <div style="font-size: 15.5px; font-weight: 800; color: #14265C; margin-top: 2px">{{ tc.v }}</div>
+                            <div style="display: flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid #E6EEF7; border-radius: 11px; padding: 7px 9px; min-width: 0">
+                              <span style="width: 26px; height: 26px; border-radius: 50%; background: #EAF2FB; display: grid; place-items: center; font-size: 12.5px; flex-shrink: 0">{{ tc.i }}</span>
+                              <div style="min-width: 0"><div style="font-size: 11.5px; font-weight: 700; color: #4E687F; line-height: 1.25">{{ tc.l }}</div><div style="font-size: 14.5px; font-weight: 800; color: #14265C">{{ tc.v }}</div></div>
                             </div>
                           </sc-for>
                         </div>
                       </div>
                     </sc-for>
                   </div>
+                  <div style="padding: 0 18px 14px; font-size: 12.5px; color: #4E687F; line-height: 1.55">ℹ️ Eau adoucie = cycles × capacité par régénération · eau de régénération = cycles × durée de régénération · sel = cycles × sel par régénération (volume de résine). Sans compteur, les cycles sont estimés d'après le sel.</div>
+                  <div style="background: #14265C; color: #ffffff; padding: 12px 18px; font-size: 13.5px; font-weight: 800">📌 {{ ecConsoPied }}</div>
                 </div>
-                <p style="font-size: 13.5px; color: #4E687F; line-height: 1.6; margin: 0">Calculé à chaque compte rendu : eau adoucie = nombre de cycles × capacité par régénération ; eau de régénération = cycles × durée de régénération ; sel = cycles × quantité de sel par régénération selon le volume de résine. Sans compteur de cycles, les cycles sont estimés d'après le sel consommé.</p>
               </sc-if>
               <!-- ===== ÉVOLUTION DES CONSOMMATIONS — identique à l'onglet Comptes rendus de l'application ===== -->
               <sc-if value="{{ ecEvo.aAnnees }}" hint-placeholder-val="{{ false }}">
-                <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 22px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+                <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; overflow: hidden; min-width: 0; display: flex; flex-direction: column">
+                  <div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 38px; height: 38px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 17px; flex-shrink: 0">📈</span><div style="flex: 1; min-width: 0"><div style="font-size: 15.5px; font-weight: 800; color: #14265C">Évolution des consommations</div><div style="font-size: 12.5px; color: #4E687F; font-weight: 600; margin-top: 1px; line-height: 1.35">Touchez une carte pour afficher sa courbe</div></div><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 3px 10px; font-size: 12px; font-weight: 800; white-space: nowrap; flex-shrink: 0">{{ ecEvo.anneePill }}</span></div>
+                  <div style="padding: 14px 18px 18px; display: flex; flex-direction: column; gap: 14px; min-width: 0">
                   <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap">
-                    <div style="font-size: 16px; font-weight: 800; color: #14265C">📈 Évolution des consommations</div>
                     <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center">
                       <sc-for list="{{ ecEvo.annees }}" as="ya" hint-placeholder-count="2">
                         <span sc-camel-on-click="{{ ya.choisir }}" style="cursor: pointer; background: {{ ya.bg }}; color: {{ ya.fg }}; border-radius: 9px; padding: 7px 12px; font-size: 13px; font-weight: 800">{{ ya.y }}</span>
@@ -1112,11 +1073,11 @@
                       <span sc-camel-on-click="{{ ecEvo.toutMasquer }}" style="cursor: pointer; background: #EDF4F9; color: #14265C; border-radius: 99px; padding: 7px 12px; font-size: 12.5px; font-weight: 700" style-hover="background: #DCEAF6">Tout masquer</span>
                     </div>
                   </div>
-                  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px">
+                  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px">
                     <sc-for list="{{ ecEvo.cartes }}" as="x" hint-placeholder-count="8">
                       <div sc-camel-on-click="{{ x.basculer }}" style="cursor: pointer; background: #fff; border: 1.5px solid {{ x.bord }}; box-shadow: {{ x.ombre }}; border-radius: 14px; padding: 12px 14px 8px; min-width: 0; transition: box-shadow .15s, border-color .15s" style-hover="background: #FBFDFF">
-                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px">
-                          <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #4E687F; min-width: 0"><span style="width: 9px; height: 9px; border-radius: 99px; background: {{ x.c }}; flex-shrink: 0"></span>{{ x.t }}</span>
+                        <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 2px 6px">
+                          <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #4E687F; min-width: 0; line-height: 1.3"><span style="width: 9px; height: 9px; border-radius: 99px; background: {{ x.c }}; flex-shrink: 0"></span>{{ x.t }}</span>
                           <span style="font-size: 10.5px; font-weight: 800; color: {{ x.etatCol }}; flex-shrink: 0">{{ x.etat }}</span>
                         </div>
                         <div style="font-size: 22px; font-weight: 800; color: #14265C; margin-top: 5px">{{ x.valeur }} <span style="font-size: 12.5px; font-weight: 700; color: #4E687F">{{ x.unite }}</span></div>
@@ -1148,7 +1109,7 @@
                       </sc-for>
                     </sc-for>
                     <sc-for list="{{ ecEvo.mois }}" as="mm" hint-placeholder-count="12">
-                      <div style="position: absolute; left: {{ mm.xPct }}; bottom: 8px; transform: translateX(-50%); font-size: 11.5px; font-weight: {{ mm.poids }}; color: {{ mm.col }}">{{ mm.m }}</div>
+                      <div style="position: absolute; left: {{ mm.xPct }}; bottom: 8px; transform: {{ mm.tf }}; font-size: clamp(9.5px, 1.6vw, 11.5px); white-space: nowrap; font-weight: {{ mm.poids }}; color: {{ mm.col }}">{{ mm.m }}</div>
                     </sc-for>
                     <sc-for list="{{ ecEvo.bandes }}" as="b" hint-placeholder-count="12">
                       <div sc-camel-on-mouse-enter="{{ b.entrer }}" sc-camel-on-click="{{ b.clic }}" style="position: absolute; top: 0; bottom: 0; left: {{ b.left }}; width: 8.3333%"></div>
@@ -1171,7 +1132,7 @@
                   <div style="display: flex; justify-content: flex-end">
                     <span sc-camel-on-click="{{ ecEvo.basculerVides }}" style="cursor: pointer; background: #EDF4F9; color: #14265C; border-radius: 99px; padding: 7px 12px; font-size: 12.5px; font-weight: 700" style-hover="background: #DCEAF6">{{ ecEvo.videsLabel }}</span>
                   </div>
-                  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px">
+                  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 10px">
                     <sc-for list="{{ ecEvo.lignes }}" as="l" hint-placeholder-count="12">
                       <div sc-camel-on-mouse-enter="{{ l.entrer }}" sc-camel-on-click="{{ l.entrer }}" style="border-radius: 14px; padding: 12px 13px; background: {{ l.fondCarte }}; border: 1.5px {{ l.trait }} {{ l.bord }}; box-shadow: {{ l.ombre }}; min-width: 0; transition: box-shadow .15s, border-color .15s">
                         <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px">
@@ -1193,10 +1154,11 @@
                     </sc-for>
                   </div>
                   <div style="background: #14265C; color: #fff; border-radius: 14px; padding: 13px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 26px">
-                    <b style="font-size: 14.5px">{{ ecEvo.total.nom }}</b>
+                    <b style="font-size: 14.5px">📌 {{ ecEvo.total.nom }}</b>
                     <sc-for list="{{ ecEvo.total.cells }}" as="ce" hint-placeholder-count="4">
                       <span style="display: flex; align-items: center; gap: 7px; font-size: 13.5px"><span style="width: 8px; height: 8px; border-radius: 99px; background: {{ ce.c }}; box-shadow: 0 0 0 2px #fff"></span><span style="color: #9CC8EC; font-weight: 600">{{ ce.t }}</span><b>{{ ce.v }}</b><sc-if value="{{ ce.aE }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 800; color: #9CC8EC">{{ ce.e }}</span></sc-if></span>
                     </sc-for>
+                  </div>
                   </div>
                 </div>
               </sc-if>
@@ -1289,17 +1251,16 @@
               <sc-if value="{{ ecSecOk }}" hint-placeholder-val="{{ false }}">
                 <div style="background: #E2F5EA; border: 1px solid #BFE3CE; color: #1F7A4D; border-radius: 14px; padding: 14px 18px; font-size: 15px; font-weight: 700">✓ {{ ecSecOkTxt }}</div>
               </sc-if>
-              <div class="bw-pad" style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 26px; display: grid; gap: 14px">
-                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px">
-                  <div style="font-size: 17px; font-weight: 800; color: #14265C; flex: 1 1 240px; min-width: 0">Double authentification</div>
-                  <sc-if value="{{ ecA2fActive }}" hint-placeholder-val="{{ false }}"><span style="background: #E2F5EA; color: #1F7A4D; border-radius: 9px; padding: 7px 12px; font-size: 13px; font-weight: 800">Activée · {{ ecA2fLibelle }}</span></sc-if>
-                  <sc-if value="{{ ecA2fInactive }}" hint-placeholder-val="{{ true }}"><span style="background: #EDF4F9; color: #4E687F; border-radius: 9px; padding: 7px 12px; font-size: 13px; font-weight: 800">Désactivée</span></sc-if>
-                </div>
-                <p style="font-size: 14.5px; line-height: 1.6; color: #4E687F; margin: 0">Facultative. Une fois activée, un code vous est demandé en plus du mot de passe à chaque connexion.</p>
+              <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; overflow: hidden; min-width: 0">
+                <div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 38px; height: 38px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 17px; flex-shrink: 0">🔐</span><div style="flex: 1; min-width: 0"><div style="font-size: 15.5px; font-weight: 800; color: #14265C">Double authentification</div><div style="font-size: 12.5px; color: #4E687F; font-weight: 600; margin-top: 1px; line-height: 1.35">Facultative : un code en plus du mot de passe à chaque connexion</div></div><span style="background: {{ ecA2fPillBg }}; color: {{ ecA2fPillFg }}; border-radius: 99px; padding: 3px 10px; font-size: 12px; font-weight: 800; white-space: nowrap; flex-shrink: 0">{{ ecA2fPill }}</span></div>
+                <div style="padding: 14px 18px 16px; display: grid; gap: 12px">
+                <sc-if value="{{ ecA2fActive }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: flex; align-items: center; gap: 12px; background: #E2F5EA; border: 1px solid #BFE3CE; border-radius: 13px; padding: 11px 12px"><span style="width: 36px; height: 36px; border-radius: 50%; background: #ffffff; display: grid; place-items: center; font-size: 16px; flex-shrink: 0">{{ ecA2fIco }}</span><span style="flex: 1; min-width: 0; font-size: 14.5px; font-weight: 800; color: #1F7A4D">✓ {{ ecA2fLibelle }}</span></div>
+                </sc-if>
                 <sc-if value="{{ ecA2fChoix }}" hint-placeholder-val="{{ true }}">
-                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px">
-                    <button onClick="{{ ecPreparerEmail }}" style="background: #EAF2FB; color: #14265C; border: 1px solid #9CC8EC; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 14.5px; font-family: inherit; cursor: pointer; text-align: left" style-hover="background: #DCEAF6">✉️ Code reçu par e-mail</button>
-                    <button onClick="{{ ecPreparerApp }}" style="background: #EAF2FB; color: #14265C; border: 1px solid #9CC8EC; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 14.5px; font-family: inherit; cursor: pointer; text-align: left" style-hover="background: #DCEAF6">📱 Application d'authentification</button>
+                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px">
+                    <button onClick="{{ ecPreparerEmail }}" style="display: flex; align-items: center; gap: 12px; background: #FBFDFF; color: #14265C; border: 1px solid #DCE8F2; padding: 11px 12px; border-radius: 13px; font-family: inherit; cursor: pointer; text-align: left; min-width: 0" style-hover="border: 1px solid #2F7DD1; background: #F4F9FD"><span style="width: 36px; height: 36px; border-radius: 50%; background: #DCEBFA; display: grid; place-items: center; font-size: 16px; flex-shrink: 0">✉️</span><span style="flex: 1; min-width: 0"><span style="display: block; font-size: 14.5px; font-weight: 800">Code reçu par e-mail</span><span style="display: block; font-size: 12.5px; color: #4E687F; font-weight: 600; margin-top: 1px">Envoyé à chaque connexion</span></span><span style="font-size: 13px; font-weight: 800; color: #2F7DD1; white-space: nowrap; flex-shrink: 0">Activer ›</span></button>
+                    <button onClick="{{ ecPreparerApp }}" style="display: flex; align-items: center; gap: 12px; background: #FBFDFF; color: #14265C; border: 1px solid #DCE8F2; padding: 11px 12px; border-radius: 13px; font-family: inherit; cursor: pointer; text-align: left; min-width: 0" style-hover="border: 1px solid #2F7DD1; background: #F4F9FD"><span style="width: 36px; height: 36px; border-radius: 50%; background: #DCEBFA; display: grid; place-items: center; font-size: 16px; flex-shrink: 0">📱</span><span style="flex: 1; min-width: 0"><span style="display: block; font-size: 14.5px; font-weight: 800">Application d’authentification</span><span style="display: block; font-size: 12.5px; color: #4E687F; font-weight: 600; margin-top: 1px">Google ou Microsoft Authenticator</span></span><span style="font-size: 13px; font-weight: 800; color: #2F7DD1; white-space: nowrap; flex-shrink: 0">Activer ›</span></button>
                   </div>
                 </sc-if>
                 <sc-if value="{{ ecPrepApp }}" hint-placeholder-val="{{ false }}">
@@ -1325,19 +1286,23 @@
                     <button onClick="{{ ecDesactiverA2f }}" style="background: #FDEBE9; color: #C2362F; border: 1px solid #F3CFCC; padding: 14px 18px; border-radius: 12px; font-weight: 800; font-size: 15px; font-family: inherit; cursor: pointer">Désactiver</button>
                   </div>
                 </sc-if>
+                </div>
               </div>
-              <div class="bw-pad" style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 26px; display: grid; gap: 12px">
-                <div style="font-size: 17px; font-weight: 800; color: #14265C">Changer de mot de passe</div>
+              <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; overflow: hidden; min-width: 0">
+                <div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 38px; height: 38px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 17px; flex-shrink: 0">🔑</span><div style="flex: 1; min-width: 0"><div style="font-size: 15.5px; font-weight: 800; color: #14265C">Changer de mot de passe</div><div style="font-size: 12.5px; color: #4E687F; font-weight: 600; margin-top: 1px; line-height: 1.35">10 caractères minimum, une majuscule, une minuscule et un chiffre</div></div><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 3px 10px; font-size: 12px; font-weight: 800; white-space: nowrap; flex-shrink: 0">{{ ecReglesPill }}</span></div>
+                <div style="padding: 14px 18px 16px; display: grid; gap: 12px">
                 <input type="password" autocomplete="current-password" value="{{ ecSecMdp }}" onChange="{{ setEcSecMdp }}" placeholder="Mot de passe actuel" style="background: #fff; border: 1px solid #CBDDEC; border-radius: 12px; padding: 14px; font-size: 15px; font-family: inherit; color: #001331" style-focus="border: 1px solid #2F7DD1; outline: none" />
                 <input type="password" autocomplete="new-password" value="{{ ecMdp }}" onChange="{{ setEcMdp }}" placeholder="Nouveau mot de passe" style="background: #fff; border: 1px solid #CBDDEC; border-radius: 12px; padding: 14px; font-size: 15px; font-family: inherit; color: #001331" style-focus="border: 1px solid #2F7DD1; outline: none" />
                 <input type="password" autocomplete="new-password" value="{{ ecMdp2 }}" onChange="{{ setEcMdp2 }}" placeholder="Confirmez le nouveau mot de passe" style="background: #fff; border: 1px solid #CBDDEC; border-radius: 12px; padding: 14px; font-size: 15px; font-family: inherit; color: #001331" style-focus="border: 1px solid #2F7DD1; outline: none" />
                 <div style="display: grid; gap: 5px; font-size: 13.5px; font-weight: 700">
                   <sc-for list="{{ ecRegles }}" as="rg" hint-placeholder-count="4">
-                    <sc-if value="{{ rg.ok }}" hint-placeholder-val="{{ false }}"><div style="color: #1F7A4D">✓ {{ rg.l }}</div></sc-if>
-                    <sc-if value="{{ rg.ko }}" hint-placeholder-val="{{ true }}"><div style="color: #8A97B8">○ {{ rg.l }}</div></sc-if>
+                    <sc-if value="{{ rg.ok }}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; color: #1F7A4D"><span style="width: 18px; height: 18px; border-radius: 50%; background: #1F8A5B; color: #ffffff; display: grid; place-items: center; font-size: 11px; font-weight: 900; flex-shrink: 0">✓</span>{{ rg.l }}</div></sc-if>
+                    <sc-if value="{{ rg.ko }}" hint-placeholder-val="{{ true }}"><div style="display: flex; align-items: center; gap: 8px; color: #8A97B8"><span style="width: 18px; height: 18px; border-radius: 50%; background: #ffffff; border: 2px solid #CBD5E1; box-sizing: border-box; flex-shrink: 0"></span>{{ rg.l }}</div></sc-if>
                   </sc-for>
                 </div>
-                <button onClick="{{ ecChangerMdp }}" style="justify-self: start; background: #14265C; color: #fff; padding: 14px 22px; border-radius: 12px; font-weight: 800; font-size: 15px; border: none; font-family: inherit; cursor: pointer" style-hover="background: #2F7DD1">Enregistrer le mot de passe</button>
+                <button onClick="{{ ecChangerMdp }}" style="justify-self: start; background: #2F7DD1; color: #fff; padding: 13px 20px; border-radius: 12px; font-weight: 800; font-size: 15px; border: none; font-family: inherit; cursor: pointer" style-hover="background: #14265C">Enregistrer le mot de passe</button>
+                </div>
+                <div style="background: #14265C; color: #ffffff; padding: 12px 18px; font-size: 13.5px; font-weight: 800">📌 {{ ecSecPied }}</div>
               </div>
               <sc-if value="{{ ecAErreur }}" hint-placeholder-val="{{ false }}">
                 <div style="background: #FDEBE9; border: 1px solid #F3CFCC; color: #C2362F; border-radius: 12px; padding: 13px 15px; font-size: 14px; font-weight: 700; line-height: 1.5">{{ ecErreur }}</div>
@@ -1351,31 +1316,37 @@
               <sc-if value="{{ ecCmdOk }}" hint-placeholder-val="{{ false }}">
                 <div style="background: #E2F5EA; border: 1px solid #BFE3CE; color: #1F7A4D; border-radius: 14px; padding: 15px 18px; font-size: 15px; font-weight: 700; line-height: 1.5">✓ Demande envoyée. Je vous recontacte pour la livraison ou la pose lors de votre prochaine visite.</div>
               </sc-if>
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px">
-                <sc-for list="{{ ecArticles }}" as="ar" hint-placeholder-count="3">
-                  <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 12px; min-width: 0">
-                    <span style="width: 46px; height: 46px; border-radius: 50%; background: #DCEBFA; border: none; display: grid; place-items: center; font-size: 21px">{{ ar.icone }}</span>
-                    <div style="font-size: 16.5px; font-weight: 800; color: #14265C">{{ ar.nom }}</div>
-                    <p style="font-size: 14.5px; line-height: 1.55; color: #4E687F; margin: 0; flex: 1">{{ ar.desc }}</p>
-                    <div style="display: grid; gap: 8px">
-                      <button onClick="{{ ar.commander }}" style="background: #2F7DD1; color: #fff; padding: 13px; border-radius: 11px; font-weight: 800; font-size: 15px; border: none; font-family: inherit; cursor: pointer" style-hover="background: #14265C">Commander auprès de BlueWavea</button>
+              <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; overflow: hidden; min-width: 0"><div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 38px; height: 38px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 17px; flex-shrink: 0">🛒</span><div style="flex: 1; min-width: 0"><div style="font-size: 15.5px; font-weight: 800; color: #14265C">Consommables</div><div style="font-size: 12.5px; color: #4E687F; font-weight: 600; margin-top: 1px; line-height: 1.35">Commandez auprès de BlueWavea : livraison ou pose à la prochaine visite</div></div><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 3px 10px; font-size: 12px; font-weight: 800; white-space: nowrap; flex-shrink: 0">{{ ecArtPill }}</span></div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 10px; padding: 14px 18px 16px">
+                  <sc-for list="{{ ecArticles }}" as="ar" hint-placeholder-count="3">
+                    <div style="display: flex; align-items: center; gap: 12px; border: 1px solid #E6EEF7; border-radius: 13px; padding: 11px 12px; background: #FBFDFF; min-width: 0">
+                      <span style="width: 38px; height: 38px; border-radius: 50%; background: #DCEBFA; display: grid; place-items: center; font-size: 17px; flex-shrink: 0">{{ ar.icone }}</span>
+                      <div style="flex: 1; min-width: 0">
+                        <div style="font-size: 14.5px; font-weight: 800; color: #14265C; line-height: 1.3">{{ ar.nom }}</div>
+                        <div style="font-size: 12.5px; color: #4E687F; line-height: 1.4; margin-top: 2px">{{ ar.desc }}</div>
+                      </div>
+                      <button onClick="{{ ar.commander }}" style="background: #2F7DD1; color: #fff; padding: 9px 13px; border-radius: 10px; font-weight: 800; font-size: 13px; border: none; font-family: inherit; cursor: pointer; white-space: nowrap; flex-shrink: 0" style-hover="background: #14265C">Commander</button>
                     </div>
-                  </div>
-                </sc-for>
+                  </sc-for>
+                </div>
               </div>
-              <sc-if value="{{ ecACommandes }}" hint-placeholder-val="{{ false }}">
-                <div>
-                  <div style="font-size: 13px; font-weight: 800; letter-spacing: 1.2px; color: #2F7DD1">MES DEMANDES</div>
-                  <div style="display: grid; gap: 8px; margin-top: 12px">
+              <div style="background: #ffffff; border: 1px solid #E3ECF5; border-radius: 16px; overflow: hidden; min-width: 0"><div style="display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: #F7FAFD; border-bottom: 1px solid #E6EEF7"><span style="width: 38px; height: 38px; border-radius: 50%; background: #ffffff; border: 1px solid #DCE8F2; display: grid; place-items: center; font-size: 17px; flex-shrink: 0">📦</span><div style="flex: 1; min-width: 0"><div style="font-size: 15.5px; font-weight: 800; color: #14265C">Mes demandes</div><div style="font-size: 12.5px; color: #4E687F; font-weight: 600; margin-top: 1px; line-height: 1.35">Suivi de vos commandes de consommables</div></div><span style="background: #E6F0FA; color: #14265C; border-radius: 99px; padding: 3px 10px; font-size: 12px; font-weight: 800; white-space: nowrap; flex-shrink: 0">{{ ecCmdPill }}</span></div>
+                <sc-if value="{{ ecSansCommandes }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding: 20px 18px; text-align: center; font-size: 14px; color: #4E687F">📭 Aucune demande pour le moment.</div>
+                </sc-if>
+                <sc-if value="{{ ecACommandes }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: grid; gap: 8px; padding: 14px 18px">
                     <sc-for list="{{ ecCommandes }}" as="k" hint-placeholder-count="1">
-                      <div style="background: #fff; border: 1px solid #DCEAF6; border-radius: 14px; padding: 14px 18px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; font-size: 14.5px">
-                        <span style="font-weight: 700; color: #14265C; min-width: 0">{{ k.article }} × {{ k.quantite }}</span>
-                        <span style="color: #4E687F; font-weight: 600">{{ k.le }} · {{ k.etat }}</span>
+                      <div style="display: flex; align-items: center; gap: 12px; border: 1px solid #E6EEF7; border-radius: 13px; padding: 10px 12px; min-width: 0">
+                        <span style="width: 32px; height: 32px; border-radius: 50%; background: #EAF2FB; display: grid; place-items: center; font-size: 14px; flex-shrink: 0">📦</span>
+                        <div style="flex: 1; min-width: 0"><div style="font-size: 14px; font-weight: 800; color: #14265C; line-height: 1.3">{{ k.article }} × {{ k.quantite }}</div><div style="font-size: 12.5px; color: #4E687F; font-weight: 600">Demandée le {{ k.le }}</div></div>
+                        <span style="background: {{ k.etatBg }}; color: {{ k.etatFg }}; border-radius: 99px; padding: 3px 10px; font-size: 12px; font-weight: 800; white-space: nowrap; flex-shrink: 0">{{ k.etat }}</span>
                       </div>
                     </sc-for>
                   </div>
-                </div>
-              </sc-if>
+                  <div style="background: #14265C; color: #ffffff; padding: 12px 18px; font-size: 13.5px; font-weight: 800">📌 {{ ecCmdPied }}</div>
+                </sc-if>
+              </div>
             </div>
           </sc-if>
         </sc-if>
@@ -1808,7 +1779,7 @@ class Component extends DCLogic {
       comparer: () => this.setState(st => ({ ecComparer: !st.ecComparer })),
       cmpLabel: 'Comparer à ' + anP, cmpBg: cmpE ? '#14265C' : '#ffffff', cmpFg: cmpE ? '#ffffff' : '#14265C', cmpBord: cmpE ? '#14265C' : '#DCEAF6',
       grille: [0, 1, 2, 3].map(g => ({ y: +(ET + g * (EH - ET - EB) / 3).toFixed(1) })),
-      mois: MC.map((m, i) => ({ m, xPct: (ex(i) / EW * 100).toFixed(2) + '%', poids: hovE === i ? '800' : '600', col: hovE === i ? '#14265C' : '#A9B4CC' })),
+      mois: MC.map((m, i) => ({ m, tf: i === 0 ? 'translateX(-15%)' : (i === MC.length - 1 ? 'translateX(-85%)' : 'translateX(-50%)'), xPct: (ex(i) / EW * 100).toFixed(2) + '%', poids: hovE === i ? '800' : '600', col: hovE === i ? '#14265C' : '#A9B4CC' })),
       bandes: MC.map((m, i) => ({ left: (i / 12 * 100).toFixed(3) + '%', entrer: survol(i), clic: survol(i) })),
       quitter: () => { if (this.state.ecMois != null) this.setState({ ecMois: null }); },
       aSurvol: hovE != null && hovE >= 0 && hovE < 12 && actifs.length > 0,
@@ -1817,8 +1788,8 @@ class Component extends DCLogic {
         titre: MOIS[hovE] + ' ' + an, left: (ex(hovE) / EW * 100).toFixed(2) + '%', tf: hovE > 6 ? 'translateX(calc(-100% - 18px))' : 'translateX(18px)',
         lignes: actifs.map(x => { const v = x.cur[hovE], p = x.prev[hovE]; const aE = cmpE && x.d.cum && v != null && p != null; return { c: x.c, t: x.t, v: txtE(x, hovE), aE, e: aE ? ecart(v, p, x.d.u || '').trim() + ' vs ' + anP : '' }; }),
       },
-      basculerVides: () => this.setState(st => ({ ecVides: !st.ecVides })),
-      videsLabel: S.ecVides ? 'Afficher tous les mois' : 'Mois avec valeurs uniquement',
+      basculerVides: () => this.setState(st => ({ ecTousMois: !st.ecTousMois })),
+      videsLabel: S.ecTousMois ? 'Mois avec valeurs uniquement' : 'Afficher les 12 mois',
       lignes: MOIS.map((m, i) => {
         const cells = actifs.map(x => {
           const v = x.cur[i], p = x.prev[i]; const aE = cmpE && x.d.cum && v != null && p != null;
@@ -1839,7 +1810,8 @@ class Component extends DCLogic {
           donnees: cells.filter(ce => ce.aDonnee), vide: !aDonnees, aDonnees,
           bord: hovE === i ? '#2F7DD1' : '#DCEAF6', trait: aDonnees ? 'solid' : 'dashed', fondCarte: aDonnees ? '#ffffff' : '#FBFDFF', ombre: hovE === i ? '0 0 0 3px #EAF2FB' : 'none',
         };
-      }).filter(l => !S.ecVides || l.aDonnees),
+      }).filter(l => S.ecTousMois || l.aDonnees),
+      anneePill: an || '—',
       total: {
         nom: 'Total ' + an,
         cells: actifs.map(x => { const vs = x.cur.filter(v => v != null), ps = x.prev.filter(v => v != null); const v = !vs.length ? null : (x.d.cum ? vs.reduce((p1, p2) => p1 + p2, 0) : vs.reduce((p1, p2) => p1 + p2, 0) / vs.length); const p = x.d.cum && ps.length ? ps.reduce((p1, p2) => p1 + p2, 0) : null; const aE = cmpE && x.d.cum && v != null && p != null; return { t: x.t, c: x.c, v: v == null ? '—' : ((x.d.cum ? '' : 'moy. ') + fmtE(v, x.d)), aE, e: aE ? ecart(v, p, x.d.u || '').trim() : '' }; }),
@@ -2040,6 +2012,10 @@ class Component extends DCLogic {
       },
       ecTSecu: s.ecOnglet === 'secu',
       ecA2fActive: s.ecSec === 'email' || s.ecSec === 'app', ecA2fInactive: !(s.ecSec === 'email' || s.ecSec === 'app'),
+      ...(() => { const on = s.ecSec === 'email' || s.ecSec === 'app', n = [s.ecMdp.length >= 10, /[A-Z]/.test(s.ecMdp), /[a-z]/.test(s.ecMdp), /\d/.test(s.ecMdp), !!s.ecMdp && s.ecMdp === s.ecMdp2].filter(Boolean).length;
+        return { ecA2fPill: on ? '✓ Activée' : 'Désactivée', ecA2fPillBg: on ? '#E2F5EA' : '#EDF4F9', ecA2fPillFg: on ? '#1F7A4D' : '#4E687F', ecA2fIco: s.ecSec === 'app' ? '📱' : '✉️',
+          ecReglesPill: n + ' / 5 règles',
+          ecSecPied: 'Compte protégé par mot de passe' + (on ? ' + double authentification (' + (s.ecSec === 'app' ? 'application' : 'e-mail') + ')' : ' · double authentification désactivée') }; })(),
       ecA2fLibelle: s.ecSec === 'app' ? 'application d’authentification' : 'code par e-mail',
       ecA2fChoix: s.ecSec === 'aucune' && !s.ecPrep,
       ecPrep: !!s.ecPrep, ecPrepApp: !!s.ecPrep && s.ecPrep.mode === 'app', ecPrepEmail: !!s.ecPrep && s.ecPrep.mode === 'email',
@@ -2121,17 +2097,26 @@ class Component extends DCLogic {
         const ouvert = !!s.ecOuvert[it.id];
         return {
           icone: ico(it.type), type: it.type, quand: it.date + (it.heure ? ' à ' + it.heure : ''),
+          /* (15/11/2026) couleur par type, comme l'application : entretien bleu, dépannage orange, mise en service vert */
+          couleur: /mise en service/i.test(it.type) ? '#1F8A5B' : (/dépann|répar/i.test(it.type) ? '#D98A1C' : '#2F7DD1'),
+          teinte: /mise en service/i.test(it.type) ? '#E2F5EA' : (/dépann|répar/i.test(it.type) ? '#FBF1DD' : '#DCEBFA'),
+          pillTexte: it.signeLe ? 'Signé le ' + it.signeLe : 'Rédigé',
+          pillConso: it.conso ? (it.conso.jours + ' jour' + (it.conso.jours > 1 ? 's' : '')) : '',
+          pillMesures: it.mesures.length + ' mesure' + (it.mesures.length > 1 ? 's' : ''),
+          pillControles: it.controles.length + ' contrôle' + (it.controles.length > 1 ? 's' : ''),
+          pillPieces: it.pieces.length + ' pièce' + (it.pieces.length > 1 ? 's' : ''),
+          pillPhotos: it.photos.length + ' photo' + (it.photos.length > 1 ? 's' : ''),
           fleche: ouvert ? 'Masquer ▴' : 'Détail ▾', ouvert,
           basculer: () => this.setState(st => ({ ecOuvert: { ...st.ecOuvert, [it.id]: !st.ecOuvert[it.id] } })),
           texte: it.texte, aTexte: !!it.texte,
           aConso: !!it.conso,
           consoPeriode: it.conso ? 'Du ' + it.conso.du + ' au ' + it.conso.au + ' · ' + it.conso.cycles + (it.conso.source === 'sel' ? ' cycles estimés d’après le sel' : ' cycles') : '',
           consoMois: it.conso ? [
-            { l: 'Eau adoucie', v: this._ecNb(it.conso.moisEau) + ' m³ / mois' },
-            { l: 'Eau de régénération', v: this._ecNb(it.conso.moisRegen) + ' m³ / mois' },
-            { l: 'Sel', v: it.conso.moisSel != null ? this._ecNb(it.conso.moisSel) + ' kg / mois' : '—' },
+            { l: 'Eau adoucie', ico: '💧', v: this._ecNb(it.conso.moisEau) + ' m³ / mois' },
+            { l: 'Eau de régénération', ico: '🔄', v: this._ecNb(it.conso.moisRegen) + ' m³ / mois' },
+            { l: 'Sel', ico: '🧂', v: it.conso.moisSel != null ? this._ecNb(it.conso.moisSel) + ' kg / mois' : '—' },
           ] : [],
-          mesures: it.mesures, aMesures: it.mesures.length > 0,
+          mesures: it.mesures.map(m => ({ ...m, ico: /dureté/i.test(m.l) ? '🧪' : /sel|sac/i.test(m.l) ? '🧂' : /eau|volume/i.test(m.l) ? '💧' : /temps|heure/i.test(m.l) ? '⏱️' : /cycle/i.test(m.l) ? '🔄' : '📏' })), aMesures: it.mesures.length > 0,
           controles: it.controles, aControles: it.controles.length > 0,
           pieces: it.pieces, aPieces: it.pieces.length > 0,
           photos: it.photos.map(src => ({ vignette: img(src, { width: '100%', height: '100%', objectFit: 'cover', display: 'block' }), voir: () => this.setState({ ecPhoto: src }) })),
@@ -2139,6 +2124,7 @@ class Component extends DCLogic {
           signeLe: it.signeLe, aSigne: !!it.signeLe,
         };
       }),
+      ecInterPied: (() => { const L = a ? a.interventions : []; const n = L.length; return { voir: n > 0, txt: 'Total : ' + n + ' intervention' + (n > 1 ? 's' : '') + (n ? ' · dernière le ' + L[0].date : '') }; })(),
       ecAPhoto: !!s.ecPhoto,
       ecPhotoGrande: s.ecPhoto ? img(s.ecPhoto, { maxWidth: '100%', maxHeight: '100%', borderRadius: 14, display: 'block' }) : null,
       ecFermerPhoto: () => this.setState({ ecPhoto: null }),
@@ -2146,15 +2132,18 @@ class Component extends DCLogic {
         periode: 'Du ' + p.du + ' au ' + p.au,
         source: p.source === 'sel' ? 'Sans compteur · estimé d’après le sel' : 'Compteur de cycles',
         cols: [
-          { l: 'Cycles', v: String(p.cycles) },
-          { l: 'Eau adoucie', v: this._ecNb(p.m3) + ' m³' },
-          { l: 'Eau de régénération', v: this._ecNb(p.regenM3) + ' m³' },
-          { l: 'Sel', v: p.selKg != null ? this._ecNb(p.selKg) + ' kg' : '—' },
-          { l: 'Eau / mois', v: this._ecNb(p.moisEau) + ' m³' },
-          { l: 'Sel / mois', v: p.moisSel != null ? this._ecNb(p.moisSel) + ' kg' : '—' },
+          { i: '🔁', l: 'Cycles', v: String(p.cycles) },
+          { i: '💧', l: 'Eau adoucie', v: this._ecNb(p.m3) + ' m³' },
+          { i: '🔄', l: 'Eau de régénération', v: this._ecNb(p.regenM3) + ' m³' },
+          { i: '🧂', l: 'Sel', v: p.selKg != null ? this._ecNb(p.selKg) + ' kg' : '—' },
+          { i: '📅', l: 'Eau / mois', v: this._ecNb(p.moisEau) + ' m³' },
+          { i: '📅', l: 'Sel / mois', v: p.moisSel != null ? this._ecNb(p.moisSel) + ' kg' : '—' },
         ],
       })),
       ecEvo: this._ecEvo(a),
+      ecConsoN: periodes.length + ' période' + (periodes.length > 1 ? 's' : ''),
+      ecConsoPied: (() => { const n = periodes.length, e = periodes.reduce((t, p) => t + (p.m3 || 0), 0), sl = periodes.reduce((t, p) => t + (p.selKg || 0), 0), avecSel = periodes.some(p => p.selKg != null);
+        return 'Total : ' + this._ecNb(e) + ' m³ d’eau adoucie' + (avecSel ? ' · ' + this._ecNb(sl) + ' kg de sel' : '') + ' sur ' + n + ' période' + (n > 1 ? 's' : ''); })(),
       ecAConso: periodes.length > 0, ecSansConso: !!a && !periodes.length,
       ecRegenAn: a && a.conso.regenAn ? '+ ' + this._ecNb(a.conso.regenAn) + ' m³ pour les régénérations' : (a && a.conso.cyclesAn ? a.conso.cyclesAn + ' cycles' : ''),
       ecSelSous: a && a.conso.selAn != null ? 'par an, soit ' + this._ecNb(a.conso.selAn / 25) + ' sacs de 25 kg' : 'volume de résine non renseigné',
@@ -2198,7 +2187,11 @@ class Component extends DCLogic {
       ecDoc: s.ecDoc ? { ...s.ecDoc, charge: s.ecDoc.etat === 'charge', ok: s.ecDoc.etat === 'ok', absent: s.ecDoc.etat === 'absent', pages: s.ecDoc.pages || [], fermer: () => { this._ecDocJeton = (this._ecDocJeton || 0) + 1; this.setState({ ecDoc: null }); }, telecharger: () => this._ecTelecharger(s.ecDoc), imprimer: () => this._ecImprimerPdf(s.ecDoc) } : { pages: [] },
       ecArticles: ARTS.map(ar => ({ ...ar, aLien: /^https?:\/\//.test(ar.lien), commander: () => this.setState({ ecCmd: ar.nom, ecCmdQte: '1', ecCmdMsg: '', ecErreur: '', ecCmdOk: false }) })),
       ecCmdOk: !!s.ecCmdOk,
-      ecCommandes: (a ? a.commandes : []).map(k => ({ article: k.article, quantite: k.quantite, le: k.le, etat: k.etat === 'traitee' ? 'traitée' : 'en cours' })),
+      ecCommandes: (a ? a.commandes : []).map(k => ({ article: k.article, quantite: k.quantite, le: k.le, etat: k.etat === 'traitee' ? '✓ Traitée' : '⏳ En cours', etatBg: k.etat === 'traitee' ? '#E2F5EA' : '#FCF0DC', etatFg: k.etat === 'traitee' ? '#1F7A4D' : '#A96A10' })),
+      ecArtPill: ARTS.length + ' article' + (ARTS.length > 1 ? 's' : ''),
+      ...(() => { const L = a ? a.commandes : [], n = L.length, enc = L.filter(k => k.etat !== 'traitee').length;
+        return { ecSansCommandes: !!a && !n, ecCmdPill: n + ' demande' + (n > 1 ? 's' : ''),
+          ecCmdPied: 'Total : ' + n + ' demande' + (n > 1 ? 's' : '') + (enc ? ' · ' + enc + ' en cours' : ' · toutes traitées') }; })(),
       ecACommandes: !!a && a.commandes.length > 0,
       ecCmdOuvert: !!s.ecCmd, ecCmdArticle: s.ecCmd || '',
       ecCmdQte: s.ecCmdQte, setEcCmdQte: e => this.setState({ ecCmdQte: e.target.value }),
